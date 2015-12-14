@@ -4,6 +4,8 @@
  */
 
 'use strict';
+var util = require('util');
+var BaseManager = require(config.serverRoot + '/manager/base/BaseManager');
 
 /**
  * gm用户角色信息管理器
@@ -15,5 +17,8 @@ var RoleManager = function () {
 
 
 };
+
+// 添加继承
+util.inherits(RoleManager, BaseManager);
 
 module.exports = new RoleManager();

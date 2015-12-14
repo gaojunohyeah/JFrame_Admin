@@ -113,5 +113,9 @@ BaseDao.prototype.queryList = function (query, _page, _perPage, _sort, _order) {
   });
 };
 
+BaseDao.prototype.queryCount = function(query) {
+  return this.model.
+};
+
 module.exports = BaseDao;
 

@@ -4,6 +4,8 @@
  */
 
 'use strict';
+var util = require('util');
+var BaseManager = require(config.serverRoot + '/manager/base/BaseManager');
 
 /**
  * gm用户信息管理器
@@ -57,5 +59,8 @@ var UserManager = function () {
       .catch(err);
   }
 };
+
+// 添加继承
+util.inherits(UserManager, BaseManager);
 
 module.exports = new UserManager();
