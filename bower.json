@@ -1,0 +1,26 @@
+{
+  "name": "jframe_admin",
+  "description": "",
+  "main": "index.html",
+  "authors": [
+    "gaojunohyeah <gaojunohyeah@gmail.com>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/erealm/HomeSite",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/lib/vendor",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "ng-admin": "~0.9.1",
+    "jquery": "~2.1.4",
+    "angular-cookies": "~1.4.8",
+    "angular-http-auth": "~1.2.3",
+    "angular-local-storage": "~0.2.3"
+  }
+}

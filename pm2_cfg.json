@@ -1,0 +1,22 @@
+{
+  "apps": [
+    {
+      // Application
+      "name": "JFrame_Admin",
+      "script": "bin/www",
+      "args": [
+      ],
+      "instances": 1,
+      "exec_mode": "cluster_mode",
+      "watch": true,
+      "ignore_watch": ["logs"],
+      "max_memory_restart": "150M",
+      "node_args": "--harmony",
+      "merge_logs": true,
+      "log_date_format": "YYYY-MM-DD HH:mm Z",
+      "error_file": "./logs/child-err.log",
+      "out_file": "./logs/child-out.log",
+      "pid_file": "./logs/child.pid"
+    }
+  ]
+}
