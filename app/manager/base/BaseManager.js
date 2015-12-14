@@ -48,8 +48,8 @@ BaseManager.prototype.getList = function (res, query, mname, _page, _perPage, _s
     JF.util.http.resBack(res, []);
   };
 
-  Q.all(queryList, queryCount)
-    .then(buildList)
+  Q.all([queryList(), queryCount()])
+    .spread(buildList)
     .catch(err);
 };
 

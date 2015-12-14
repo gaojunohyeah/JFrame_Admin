@@ -21,4 +21,13 @@ module.exports = {
    * default value : 30 minutes
    */
   cookie_expiration_time: 30 * 60 * 1000,
+
+  /*
+   * 默认每页数据条数，20
+   */
+  default_perpage: 20,
+  /**
+   * 默认排序方式,ASC升序
+   */
+  default_order: "ASC", // DESC
 };

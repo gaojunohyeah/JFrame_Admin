@@ -36,10 +36,10 @@ var requestInterceptor = function (RestangularProvider) {
 
 var responseInterceptor = function (RestangularProvider) {
   RestangularProvider.addResponseInterceptor(function (data, operation, what, url, response) {
-    //if (operation == "getList" && null != response.headers('Content-Range')) {
-    //  var contentRange = response.headers('Content-Range');
-    //  response.totalCount = contentRange.split('/')[1];
-    //}
+    if (operation == "getList") {
+      response.totalCount = response.headers('Content-Range');
+      //response.totalCount = contentRange;
+    }
     return data;
   });
 };

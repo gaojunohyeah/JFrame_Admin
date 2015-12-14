@@ -6,12 +6,17 @@
 
 var menu = nga.entity('menu');
 
-menu.listView().fields([
-  nga.field('id'),
-  nga.field('name'),
-  nga.field('menu'),
-  nga.field('parent'),
-  nga.field('isEntity')
-]);
+menu.listView()
+  .title('Comments')
+  .perPage(config.default_perpage)
+  .sortDir(config.default_order)
+  .fields([
+    nga.field('id'),
+    nga.field('name'),
+    nga.field('menu'),
+    nga.field('parent'),
+    nga.field('isEntity')
+  ]
+);
 
 module.exports = menu;

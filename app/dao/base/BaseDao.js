@@ -113,8 +113,14 @@ BaseDao.prototype.queryList = function (query, _page, _perPage, _sort, _order) {
   });
 };
 
-BaseDao.prototype.queryCount = function(query) {
-  return this.model.
+/**
+ * 根据查询条件获取数量
+ *
+ * @param query 查询条件
+ * @return {*}
+ */
+BaseDao.prototype.queryCount = function (query) {
+  return this.model.count();
 };
 
 module.exports = BaseDao;

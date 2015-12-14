@@ -15,5 +15,5 @@ module.exports = function (res, reqData, mName) {
   var _sort = reqData._sort;
   var _order = reqData._order;
 
-  manager.getList(res, query, _page, _perPage, _sort, _order);
+  manager.getList(res, query, name, _page, _perPage, _sort, _order);
 };

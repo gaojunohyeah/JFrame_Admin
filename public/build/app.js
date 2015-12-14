@@ -141,10 +141,10 @@
 
 	var responseInterceptor = function responseInterceptor(RestangularProvider) {
 	  RestangularProvider.addResponseInterceptor(function (data, operation, what, url, response) {
-	    //if (operation == "getList" && null != response.headers('Content-Range')) {
-	    //  var contentRange = response.headers('Content-Range');
-	    //  response.totalCount = contentRange.split('/')[1];
-	    //}
+	    if (operation == "getList") {
+	      response.totalCount = response.headers('Content-Range');
+	      //response.totalCount = contentRange;
+	    }
 	    return data;
 	  });
 	};
@@ -893,8 +893,17 @@
 	   * default cookie expire time
 	   * default value : 30 minutes
 	   */
-	  cookie_expiration_time: 30 * 60 * 1000
-	};
+	  cookie_expiration_time: 30 * 60 * 1000,
+
+	  /*
+	   * 默认每页数据条数，20
+	   */
+	  default_perpage: 20,
+	  /**
+	   * 默认排序方式,ASC升序
+	   */
+	  default_order: "ASC" };
+	// DESC
 
 /***/ },
 /* 20 */,
@@ -1032,7 +1041,7 @@
 
 	var menu = nga.entity('menu');
 
-	menu.listView().fields([nga.field('id'), nga.field('name'), nga.field('menu'), nga.field('parent'), nga.field('isEntity')]);
+	menu.listView().title('Comments').perPage(config.default_perpage).sortDir(config.default_order).fields([nga.field('id'), nga.field('name'), nga.field('menu'), nga.field('parent'), nga.field('isEntity')]);
 
 	module.exports = menu;
 
