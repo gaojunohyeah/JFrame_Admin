@@ -4,7 +4,6 @@
 
 'use strict';
 
-// 登陆请求
 module.exports = function (res, reqData, mName) {
   var name = mName.substring(0, 1).toUpperCase() + mName.substring(1);
   var manager = JF.ma[name + 'Manager'];

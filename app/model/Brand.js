@@ -1,5 +1,5 @@
 /**
- * Role.js
+ * Brand.js
  * Created by auto tool.
  */
 
@@ -9,7 +9,7 @@ var Sequelize = require('sequelize');
 
 function db_init(sequelize) {
   // 用户信息表
-  var Role = sequelize.define('role', {
+  var Brand = sequelize.define('brand', {
     
       id: {
         type: Sequelize.BIGINT(20),
@@ -28,17 +28,17 @@ function db_init(sequelize) {
         unique: false,
         field: "name",
         defaultValue: "",
-        comment: "角色名称",
+        comment: "品牌名称",
         
       },
     
-      menu: {
-        type: Sequelize.STRING(100),
-        allowNull: false,
+      letter: {
+        type: Sequelize.INTEGER(2),
+        allowNull: true,
         unique: false,
-        field: "menu",
-        defaultValue: "",
-        comment: "菜单权限",
+        field: "letter",
+        defaultValue: 0,
+        comment: "首字母",
         
       },
     
@@ -46,15 +46,19 @@ function db_init(sequelize) {
     freezeTableName: true,
     timestamps: true,
     indexes: [
+      {
+        unique: false,
+        fields: ['letter',]
+      },
       
     ],
   });
 
-  Role.sync();
+  Brand.sync();
 
-  return Role;
+  return Brand;
 }
 
-exports.Role = function (sequelize) {
+exports.Brand = function (sequelize) {
   return db_init(sequelize);
 };

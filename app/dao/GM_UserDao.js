@@ -1,5 +1,5 @@
 /**
- * UserDao.js
+ * GM_UserDao.js
  * Created by auto tool.
  */
 
@@ -12,8 +12,8 @@ var BaseDao = require(config.serverRoot + '/dao/base/BaseDao');
  *
  * @constructor
  */
-var UserDao = function (UserModel) {
-  this.model = UserModel;
+var GM_UserDao = function (GM_UserModel) {
+  this.model = GM_UserModel;
 
   /**
    * 根据用户名获取用户
@@ -29,6 +29,6 @@ var UserDao = function (UserModel) {
 };
 
 // 添加继承
-util.inherits(UserDao, BaseDao);
+util.inherits(GM_UserDao, BaseDao);
 
-module.exports = UserDao;
+module.exports = GM_UserDao;

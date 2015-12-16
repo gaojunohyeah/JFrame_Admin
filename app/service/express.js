@@ -15,13 +15,13 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var RedisStore = require('connect-redis')(session);
 
-//var logger = require(config.serverRoot + '/service/logger');
+var logger = require(config.serverRoot + '/service/logger');
 
 module.exports = function (app) {
   app.set('env', config.environment);
 
   // 日志系统初始化
-  //global.logger = logger.init();
+  global.logger = logger.init();
 
   // view engine setup
   app.engine('html', swig.renderFile);

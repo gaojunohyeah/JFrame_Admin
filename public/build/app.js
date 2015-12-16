@@ -144,7 +144,7 @@
 	    if (operation == "getList") {
 	      response.totalCount = response.headers('Content-Range');
 	      //response.totalCount = contentRange;
-	    }
+	    } else if (operation == "remove") {}
 	    return data;
 	  });
 	};
@@ -251,7 +251,7 @@
 
 	'use strict';
 
-	var appCtrl = function appCtrl($rootScope, $scope, $state, authSrv) {
+	var appCtrl = function appCtrl($rootScope, $scope, $state, authSrv, menuSrv) {
 	  $rootScope.islogin = false;
 	  $rootScope.user = {};
 
@@ -274,26 +274,11 @@
 	  };
 
 	  /**
-	   * 登陆后根据权限添加菜单
-	   */
-	  $rootScope.addMenu = function () {
-	    var menu = nga.menu().addChild(nga.menu().title('用户管理').icon('<span class="fa fa-users fa-fw"></span>').active(function (path) {
-	      return path.indexOf('/customers') === 0;
-	    }) // active() is the function that determines if the menu is active
-	    .addChild(nga.menu(nga.entity('userinfo')).title('用户管理'))).addChild(nga.menu().title('后台管理').icon('<span class="fa fa-users fa-fw"></span>').active(function (path) {
-	      return path.indexOf('/customers') === 0;
-	    }) // active() is the function that determines if the menu is active
-	    .addChild(nga.menu(nga.entity('menu')).title('菜单管理')).addChild(nga.menu(nga.entity('role')).title('角色管理')).addChild(nga.menu(nga.entity('user')).title('gm用户管理')));
-
-	    admin.menu(menu);
-	  };
-
-	  /**
 	   * 登陆后的初始化
 	   */
 	  $rootScope.init = function () {
 	    // 根据权限动态添加菜单
-	    $rootScope.addMenu();
+	    //menuSrv.reloadMenu();
 	  };
 
 	  $scope.$on('event:auth-loginRequired', function (e, rejection) {
@@ -328,9 +313,19 @@
 	    $state.go('login');
 	    //$state.go('app.home', {}, {reload: true, inherit: false});
 	  });
+
+	  $scope.$on('event:menus-changed', function (e, menus) {
+	    // 更新菜单数据
+	    if (!_.isUndefined(menus) && !_.isNull(menus)) {
+	      menuSrv.setMenusInfo(menus);
+	    }
+
+	    // 重载菜单
+	    menuSrv.reloadMenu();
+	  });
 	};
 
-	appCtrl.$inject = ['$rootScope', '$scope', '$state', 'authSrv'];
+	appCtrl.$inject = ['$rootScope', '$scope', '$state', 'authSrv', 'menuSrv'];
 
 	module.exports = appCtrl;
 
@@ -718,6 +713,8 @@
 	  app.factory('authSrv', __webpack_require__(15));
 
 	  app.factory('reqSrv', __webpack_require__(16));
+
+	  app.factory('menuSrv', __webpack_require__(31));
 	};
 
 /***/ },
@@ -731,10 +728,15 @@
 	'use strict';
 
 	var authSrv = function authSrv($rootScope, $http, authService, localStorageService, reqSrv, $state) {
-	  var user = {};
+	  var user = {},
+	      role = {};
 
 	  function getUserInfo() {
 	    return user;
+	  }
+
+	  function getRoleInfo() {
+	    return role;
 	  }
 
 	  function isLogin() {
@@ -747,10 +749,18 @@
 	    promise.success(function (data, status, headers, config) {
 	      if (0 == data.ret) {
 	        user = data.user;
-	        $http.defaults.headers.common.Authorization = user.authToken; // Step 1
+	        role = data.role;
+
+	        // 菜单变更事件
+	        $rootScope.$broadcast('event:menus-changed', data.menus);
+
+	        //$http.defaults.headers.common.Authorization = user.authToken;  // Step 1
 	        // A more secure approach would be to store the token in SharedPreferences for Android, and Keychain for iOS
 	        localStorageService.set('authorizationToken', user.authToken);
 	        localStorageService.set('userdata', user);
+	        localStorageService.set('roledata', data.role);
+	        localStorageService.set('menudata', data.menus);
+	        localStorageService.set('logintime', Date.parse(new Date()));
 
 	        // Need to inform the http-auth-interceptor that
 	        // the user has logged in successfully.  To do this, we pass in a function that
@@ -778,10 +788,15 @@
 	    var promise = reqSrv.logout();
 	    promise['finally'](function (data) {
 	      user = {};
+
 	      localStorageService.remove('authorizationToken');
 	      localStorageService.remove('userdata');
-	      delete $http.defaults.headers.common.Authorization;
+	      localStorageService.remove('roledata');
+	      localStorageService.remove('menudata');
+	      //delete $http.defaults.headers.common.Authorization;
+
 	      $rootScope.islogin = false;
+
 	      $rootScope.$broadcast('event:auth-logout-complete');
 	    });
 	  };
@@ -792,7 +807,15 @@
 
 	  function init() {
 	    if (localStorageService.get('authorizationToken')) {
-	      user = localStorageService.get('userdata');
+	      var lasttime = localStorageService.get('logintime') || 0;
+	      var now = Date.parse(new Date());
+	      // 超时，需要重新登录
+	      if (now - lasttime > config.cookie_expiration_time) {
+	        user = null;
+	      } else {
+	        user = localStorageService.get('userdata');
+	        role = localStorageService.get('roledata');
+	      }
 	    }
 	  }
 
@@ -803,6 +826,7 @@
 	    logout: logout,
 	    loginCancelled: loginCancelled,
 	    getUserInfo: getUserInfo,
+	    getRoleInfo: getRoleInfo,
 	    isLogin: isLogin
 	  };
 	};
@@ -927,9 +951,9 @@
 	  // add entities
 	  admin.addEntity(__webpack_require__(22));
 
-	  admin.addEntity(__webpack_require__(30));
-	  admin.addEntity(__webpack_require__(28));
-	  admin.addEntity(__webpack_require__(29));
+	  admin.addEntity(__webpack_require__(33));
+	  admin.addEntity(__webpack_require__(32));
+	  admin.addEntity(__webpack_require__(34));
 
 	  // 页头
 	  admin.header(__webpack_require__(25));
@@ -1030,7 +1054,10 @@
 	module.exports = "<div class=\"row dashboard-content\">\n  <div class=\"col-lg-6\">\n    <div style=\"text-align: center\"><h1>JFrame 后台管理系统</h1></div>\n  </div>\n</div>\n";
 
 /***/ },
-/* 28 */
+/* 28 */,
+/* 29 */,
+/* 30 */,
+/* 31 */
 /***/ function(module, exports) {
 
 	/**
@@ -1039,14 +1066,132 @@
 
 	'use strict';
 
-	var menu = nga.entity('menu');
+	var menuSrv = function menuSrv($rootScope, authSrv, localStorageService) {
+	  var menus = [];
 
-	menu.listView().title('Comments').perPage(config.default_perpage).sortDir(config.default_order).fields([nga.field('id'), nga.field('name'), nga.field('menu'), nga.field('parent'), nga.field('isEntity')]);
+	  function setMenusInfo(newMenus) {
+	    menus = newMenus;
+	  }
 
-	module.exports = menu;
+	  function getMenusInfo() {
+	    return menus;
+	  }
+
+	  function reloadMenu() {
+	    // 获取用户角色及对应菜单权限
+	    var roleInfo = authSrv.getRoleInfo();
+	    var menuLimit = roleInfo.menu;
+
+	    var fatherMenus = [];
+	    var sonMenus = {};
+	    _.forEach(menus, function (menuItem) {
+	      // 父节点
+	      if (0 == menuItem.parent) {
+	        fatherMenus.push(menuItem);
+	      }
+	      // 子节点
+	      else {
+	          var items = sonMenus['' + menuItem.parent];
+	          if (_.isUndefined(items) || _.isNull(items)) {
+	            sonMenus['' + menuItem.parent] = [];
+	          }
+	          sonMenus['' + menuItem.parent].push(menuItem);
+	        }
+	    });
+
+	    // 获取menu对象
+	    var menu = nga.menu();
+
+	    // 遍历所有父节点
+	    _.forEach(fatherMenus, function (fatherMenu) {
+	      // 该用户有权限
+	      if (_.isEqual('*', menuLimit) || 0 <= menuLimit.indexOf(',' + fatherMenu.id + ',')) {
+	        var fmenu;
+	        // 绑定实体
+	        if (1 == fatherMenu.isEntity) {
+	          fmenu = nga.menu(nga.entity(fatherMenu.key));
+	        } else {
+	          fmenu = nga.menu();
+	          //fmenu.link(fatherMenu.link);
+	          if (_.isUndefined(fatherMenu.link) || _.isNull(fatherMenu.link) || _.isEqual('', fatherMenu.link)) {
+	            //fmenu.link('');
+	          } else {
+	              fmenu.link(fatherMenu.link);
+	            }
+
+	          if (_.isUndefined(fatherMenu.icon) || _.isNull(fatherMenu.icon) || _.isEqual('', fatherMenu.icon)) {
+	            fmenu.icon('<span class="glyphicon glyphicon-list ng-scope"></span>');
+	          } else {
+	            fmenu.icon('<span class="' + fatherMenu.icon + '"></span>');
+	          }
+
+	          fmenu.active(function (path) {
+	            return path.indexOf('/null') === 0;
+	          });
+	        }
+	        fmenu.title(fatherMenu.name);
+
+	        //// 子菜单
+	        _.forEach(sonMenus['' + fatherMenu.id], function (sonMenu) {
+	          var smenu;
+	          // 绑定实体
+	          if (1 == sonMenu.isEntity) {
+	            smenu = nga.menu(nga.entity(sonMenu.key));
+	          } else {
+	            smenu = nga.menu();
+	            if (_.isUndefined(sonMenu.link) || _.isNull(sonMenu.link) || _.isEqual('', sonMenu.link)) {
+	              //smenu.link('');
+	            } else {
+	                smenu.link(sonMenu.link);
+	              }
+
+	            if (_.isUndefined(sonMenu.icon) || _.isNull(sonMenu.icon) || _.isEqual('', sonMenu.icon)) {
+	              smenu.icon('<span class="glyphicon glyphicon-list ng-scope"></span>');
+	            } else {
+	              smenu.icon('<span class="' + sonMenu.icon + '"></span>');
+	            }
+
+	            smenu.active(function (path) {
+	              return path.indexOf('/null') === 0;
+	            });
+	          }
+	          smenu.title(sonMenu.name);
+
+	          fmenu.addChild(smenu);
+	          //fmenu.addChild(nga.menu(nga.entity('userinfo')).title('用户管理'));
+	        });
+
+	        menu.addChild(fmenu);
+	      }
+	    });
+
+	    // 修改菜单
+	    admin.menu(menu);
+	  }
+
+	  function init() {
+	    if (authSrv.isLogin()) {
+	      menus = localStorageService.get('menudata');
+
+	      reloadMenu();
+	    }
+	  }
+
+	  init();
+
+	  return {
+	    getMenusInfo: getMenusInfo,
+	    setMenusInfo: setMenusInfo,
+	    reloadMenu: reloadMenu
+	  };
+	};
+
+	menuSrv.$inject = ['$rootScope', 'authSrv', 'localStorageService'];
+
+	module.exports = menuSrv;
 
 /***/ },
-/* 29 */
+/* 32 */
 /***/ function(module, exports) {
 
 	/**
@@ -1055,14 +1200,32 @@
 
 	'use strict';
 
-	var user = nga.entity('user');
+	var GM_Menu = nga.entity('GM_Menu');
 
-	user.listView().fields([nga.field('id'), nga.field('username'), nga.field('nickname'), nga.field('role', 'reference').label('Role').targetEntity(admin.getEntity('role')).targetField(nga.field('name')), nga.field('state')]);
+	// list
+	GM_Menu.listView().title('Comments').perPage(config.default_perpage).sortDir(config.default_order).fields([nga.field('id').label('ID'), nga.field('name').label('菜单名称'), nga.field('key').label('实体key'),
+	//nga.field('menu')
+	//  .title('菜单层级'),
+	nga.field('parent', 'reference').label('父菜单').targetEntity(GM_Menu).targetField(nga.field('name')), nga.field('isEntity', 'choice').label('绑定实体').choices([{ label: '否', value: 0 }, { label: '是', value: 1 }]), nga.field('indexNo').label('排序')]).listActions(['edit', 'delete']);
 
-	module.exports = user;
+	// add
+	GM_Menu.creationView().fields([nga.field('name').label('菜单名称').validation({ required: true, minlength: 1, maxlength: 20 }), nga.field('key').label('实体key').attributes({ placeholder: '绑定的实体key' }).validation({ minlength: 1, maxlength: 20 }),
+	//nga.field('menu')
+	//  .label('菜单层级')
+	//  .validation({required: true}),
+	//nga.field('parent', 'reference')
+	//  .label('父菜单id')
+	//  .targetEntity(menu) // Select a target Entity
+	//  .targetField(nga.field('id')),
+	nga.field('parent', 'number').label('父菜单id').attributes({ value: 0, placeholder: '没有父菜单则填0' }), nga.field('isEntity', 'choice').label('绑定实体').choices([{ label: '否', value: 0 }, { label: '是', value: 1 }]).validation({ required: true }), nga.field('link').label('关联页面').attributes({ placeholder: '如果绑定了实体则不填' }), nga.field('active').label('激活').attributes({ placeholder: '激活' }), nga.field('icon').label('图标').attributes({ placeholder: 'css class名称,多个用空格分隔' }), nga.field('indexNo', 'number').label('排序').validation({ required: true })]);
+
+	// edit
+	GM_Menu.editionView().title('Edit menu').actions(['list', 'delete']).fields([nga.field('id').label('菜单id').editable(false), nga.field('name').label('菜单名称').validation({ required: true, minlength: 1, maxlength: 20 }), nga.field('key').label('实体key').attributes({ placeholder: '绑定的实体key' }).validation({ minlength: 1, maxlength: 20 }), nga.field('parent', 'number').label('父菜单id').attributes({ value: 0, placeholder: '没有父菜单则填0' }), nga.field('isEntity', 'choice').label('绑定实体').choices([{ label: '否', value: 0 }, { label: '是', value: 1 }]).validation({ required: true }), nga.field('link').label('关联页面').attributes({ placeholder: '如果绑定了实体则不填' }), nga.field('active').label('激活').attributes({ placeholder: '激活' }), nga.field('icon').label('图标').attributes({ placeholder: 'css class名称,多个用空格分隔' }), nga.field('indexNo', 'number').label('排序').validation({ required: true })]);
+
+	module.exports = GM_Menu;
 
 /***/ },
-/* 30 */
+/* 33 */
 /***/ function(module, exports) {
 
 	/**
@@ -1071,11 +1234,34 @@
 
 	'use strict';
 
-	var role = nga.entity('role');
+	var GM_Role = nga.entity('GM_Role');
 
-	role.listView().fields([nga.field('id'), nga.field('name'), nga.field('menu')]);
+	// list
+	GM_Role.listView().fields([nga.field('id'), nga.field('name'), nga.field('menu')]);
 
-	module.exports = role;
+	module.exports = GM_Role;
+
+/***/ },
+/* 34 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by gaojun on 15/12/11.
+	 */
+
+	'use strict';
+
+	var GM_User = nga.entity('GM_User');
+
+	GM_User.listView().fields([nga.field('id'), nga.field('username'), nga.field('nickname'), nga.field('role', 'reference').label('Role').targetEntity(admin.getEntity('GM_Role')).targetField(nga.field('name')), nga.field('state')]);
+
+	// add
+	GM_User.creationView().fields([nga.field('username').label('gm账号').validation({ required: true, minlength: 3, maxlength: 20 }), nga.field('password', 'password').label('gm密码').validation({ required: true }), nga.field('nickname').label('昵称').validation({ required: true, minlength: 1, maxlength: 20 }), nga.field('role', 'reference').label('角色').targetEntity(admin.getEntity('GM_Role')).targetField(nga.field('name')).validation({ required: true }), nga.field('state', 'choice').label('状态').choices([{ label: '禁用', value: 0 }, { label: '正常', value: 1 }]).validation({ required: true })]);
+
+	// edit
+	GM_User.editionView().actions(['list', 'delete']).fields([nga.field('id').label('gm用户id').editable(false), nga.field('username').label('gm账号').editable(false), nga.field('nickname').label('昵称').validation({ required: true, minlength: 1, maxlength: 20 }), nga.field('role', 'reference').label('角色').targetEntity(admin.getEntity('GM_Role')).targetField(nga.field('name')).validation({ required: true }), nga.field('state', 'choice').label('状态').choices([{ label: '禁用', value: 0 }, { label: '正常', value: 1 }]).validation({ required: true })]);
+
+	module.exports = GM_User;
 
 /***/ }
 /******/ ]);

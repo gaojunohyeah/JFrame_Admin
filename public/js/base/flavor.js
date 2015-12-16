@@ -39,6 +39,8 @@ var responseInterceptor = function (RestangularProvider) {
     if (operation == "getList") {
       response.totalCount = response.headers('Content-Range');
       //response.totalCount = contentRange;
+    } else if (operation == "remove") {
+
     }
     return data;
   });

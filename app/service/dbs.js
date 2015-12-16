@@ -8,9 +8,15 @@
 var Sequelize = require('sequelize');
 var Redis = require('ioredis');
 
-var menu = require(config.serverRoot + "/model/Menu");
-var role = require(config.serverRoot + "/model/Role");
-var user = require(config.serverRoot + "/model/User");
+var gm_menu = require(config.serverRoot + "/model/GM_Menu");
+var gm_role = require(config.serverRoot + "/model/GM_Role");
+var gm_user = require(config.serverRoot + "/model/GM_User");
+var brand = require(config.serverRoot + "/model/Brand");
+var car = require(config.serverRoot + "/model/Car");
+var carmodel = require(config.serverRoot + "/model/CarModel");
+var cartype = require(config.serverRoot + "/model/CarType");
+var city = require(config.serverRoot + "/model/City");
+var userinfo = require(config.serverRoot + "/model/UserInfo");
 
 
 // mysql 连接
@@ -28,6 +34,21 @@ function loadMysql() {
   });
 }
 
+// 服务器(非admin) mysql 连接
+function loadServerMysql() {
+  return new Sequelize(config.DB_SERVER_dbname, config.DB_SERVER_username, config.DB_SERVER_password, {
+    host: config.DB_SERVER_host,
+    port: config.DB_SERVER_port,
+    dialect: config.DB_SERVER_dialect,
+
+    pool: {
+      max: config.DB_SERVER_maxpool,
+      min: config.DB_SERVER_minpool,
+      idle: 10000
+    }
+  });
+}
+
 // redis 连接
 function loadRedis() {
   return new Redis(config.RD_port, config.RD_host);
@@ -40,8 +61,16 @@ exports.redis = loadRedis();
 // 数据库连接以及连接池
 var sequelize = loadMysql();
 exports.sequelize = sequelize;
+var serverSequelize = loadServerMysql();
+exports.serverSequelize = serverSequelize;
 
 // model映射
-exports.Menu = menu.Menu(sequelize);
-exports.Role = role.Role(sequelize);
-exports.User = user.User(sequelize);
+exports.GM_Menu = gm_menu.GM_Menu(sequelize);
+exports.GM_Role = gm_role.GM_Role(sequelize);
+exports.GM_User = gm_user.GM_User(sequelize);
+exports.Brand = brand.Brand(serverSequelize);
+exports.Car = car.Car(serverSequelize);
+exports.CarModel = carmodel.CarModel(serverSequelize);
+exports.CarType = cartype.CarType(serverSequelize);
+exports.City = city.City(serverSequelize);
+exports.UserInfo = userinfo.UserInfo(serverSequelize);

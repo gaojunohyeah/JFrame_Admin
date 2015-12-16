@@ -10,5 +10,5 @@ module.exports = function (reqData, req, res) {
   var password = reqData.password;
 
   // 进行登录验证
-  JF.ma.UserManager.login(username, password, req, res);
+  JF.ma.GM_UserManager.login(username, password, req, res);
 };

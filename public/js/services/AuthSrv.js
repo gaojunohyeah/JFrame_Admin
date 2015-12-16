@@ -5,10 +5,15 @@
 'use strict';
 
 var authSrv = function ($rootScope, $http, authService, localStorageService, reqSrv, $state) {
-  var user = {};
+  var user = {},
+    role = {};
 
   function getUserInfo() {
     return user;
+  }
+
+  function getRoleInfo() {
+    return role;
   }
 
   function isLogin() {
@@ -21,10 +26,18 @@ var authSrv = function ($rootScope, $http, authService, localStorageService, req
     promise.success(function (data, status, headers, config) {
       if (0 == data.ret) {
         user = data.user;
-        $http.defaults.headers.common.Authorization = user.authToken;  // Step 1
+        role = data.role;
+
+        // 菜单变更事件
+        $rootScope.$broadcast('event:menus-changed', data.menus);
+
+        //$http.defaults.headers.common.Authorization = user.authToken;  // Step 1
         // A more secure approach would be to store the token in SharedPreferences for Android, and Keychain for iOS
         localStorageService.set('authorizationToken', user.authToken);
         localStorageService.set('userdata', user);
+        localStorageService.set('roledata', data.role);
+        localStorageService.set('menudata', data.menus);
+        localStorageService.set('logintime', Date.parse(new Date()));
 
         // Need to inform the http-auth-interceptor that
         // the user has logged in successfully.  To do this, we pass in a function that
@@ -52,10 +65,15 @@ var authSrv = function ($rootScope, $http, authService, localStorageService, req
     var promise = reqSrv.logout();
     promise.finally(function (data) {
       user = {};
+
       localStorageService.remove('authorizationToken');
       localStorageService.remove('userdata');
-      delete $http.defaults.headers.common.Authorization;
+      localStorageService.remove('roledata');
+      localStorageService.remove('menudata');
+      //delete $http.defaults.headers.common.Authorization;
+
       $rootScope.islogin = false;
+
       $rootScope.$broadcast('event:auth-logout-complete');
     });
   };
@@ -66,7 +84,15 @@ var authSrv = function ($rootScope, $http, authService, localStorageService, req
 
   function init() {
     if (localStorageService.get('authorizationToken')) {
-      user = localStorageService.get('userdata');
+      var lasttime = localStorageService.get('logintime') || 0;
+      var now = Date.parse(new Date());
+      // 超时，需要重新登录
+      if (now - lasttime > config.cookie_expiration_time) {
+        user = null;
+      } else {
+        user = localStorageService.get('userdata');
+        role = localStorageService.get('roledata');
+      }
     }
   }
 
@@ -77,10 +103,12 @@ var authSrv = function ($rootScope, $http, authService, localStorageService, req
     logout: logout,
     loginCancelled: loginCancelled,
     getUserInfo: getUserInfo,
+    getRoleInfo: getRoleInfo,
     isLogin: isLogin,
   };
 };
 
-authSrv.$inject = ['$rootScope', '$http', 'authService', 'localStorageService', 'reqSrv', '$state'];
+authSrv.$inject = ['$rootScope', '$http', 'authService', 'localStorageService',
+  'reqSrv', '$state'];
 
 module.exports = authSrv;

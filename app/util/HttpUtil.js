@@ -10,22 +10,27 @@ var fs = require('fs');
  *
  * @param req request对象
  * @param res response对象
- * @param userinfo 玩家信息
+ * @param userdata 玩家信息
  * @param callback 回调函数
  */
-exports.sessionInit = function (req, res, userinfo, callback) {
+exports.sessionInit = function (req, res, userdata, callback) {
   //session创建
   req.session.regenerate(function () {
-    req.session.userId = userinfo.id;
+    req.session.userId = userdata.user.id;
 
-    var user = userinfo.dataValues;
+    var user = userdata.user;
     delete user.password;
     user.authToken = req.session.id;
 
     req.session.user = user;
     req.session.save();  //保存一下修改后的Session
 
-    exports.resBack(res, {user: user, ret: JF.enums.ret.SUCCESS});
+    exports.resBack(res, {
+      user: user,
+      role: userdata.role,
+      menus: userdata.menus,
+      ret: JF.enums.ret.SUCCESS
+    });
   });
 };
 
@@ -90,4 +95,17 @@ exports.checkParam = function (reqData, res, params) {
   });
 
   return true;
+};
+
+/**
+ * http处理异常处理
+ * 如果在promise中调用时，必须手动传入res对象
+ * :: promise.catch(...error.bind(null,res))
+ * @param res response对象
+ * @param error 异常信息对象
+ */
+exports.error = function (res, error) {
+  console.error(error);
+  logger.error(error);
+  JF.util.http.resBack(res, {ret: JF.util.base.errorFilter(error)});
 };

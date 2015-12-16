@@ -1,5 +1,5 @@
 /**
- * RoleManager.js
+ * CarTypeManager.js
  * Created by auto tool.
  */
 
@@ -8,17 +8,17 @@ var util = require('util');
 var BaseManager = require(config.serverRoot + '/manager/base/BaseManager');
 
 /**
- * gm用户角色信息管理器
+ * 车型信息表管理器
  *
  * @constructor
  */
-var RoleManager = function () {
+var CarTypeManager = function () {
   var _this = this;
 
 
 };
 
 // 添加继承
-util.inherits(RoleManager, BaseManager);
+util.inherits(CarTypeManager, BaseManager);
 
-module.exports = new RoleManager();
+module.exports = new CarTypeManager();

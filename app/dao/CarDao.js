@@ -1,5 +1,5 @@
 /**
- * MenuDao.js
+ * CarDao.js
  * Created by auto tool.
  */
 
@@ -8,16 +8,16 @@ var util = require('util');
 var BaseDao = require(config.serverRoot + '/dao/base/BaseDao');
 
 /**
- * 菜单信息数据库层操作类
+ * 出售车辆信息表数据库层操作类
  *
  * @constructor
  */
-var MenuDao = function (MenuModel) {
-  this.model = MenuModel;
+var CarDao = function (CarModel) {
+  this.model = CarModel;
 
 };
 
 // 添加继承
-util.inherits(MenuDao, BaseDao);
+util.inherits(CarDao, BaseDao);
 
-module.exports = MenuDao;
+module.exports = CarDao;

@@ -1,5 +1,5 @@
 /**
- * RoleDao.js
+ * CityDao.js
  * Created by auto tool.
  */
 
@@ -8,16 +8,16 @@ var util = require('util');
 var BaseDao = require(config.serverRoot + '/dao/base/BaseDao');
 
 /**
- * gm用户角色信息数据库层操作类
+ * 城市信息表数据库层操作类
  *
  * @constructor
  */
-var RoleDao = function (RoleModel) {
-  this.model = RoleModel;
+var CityDao = function (CityModel) {
+  this.model = CityModel;
 
 };
 
 // 添加继承
-util.inherits(RoleDao, BaseDao);
+util.inherits(CityDao, BaseDao);
 
-module.exports = RoleDao;
+module.exports = CityDao;

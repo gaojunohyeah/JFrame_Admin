@@ -1,5 +1,5 @@
 /**
- * Menu.js
+ * GM_Menu.js
  * Created by auto tool.
  */
 
@@ -9,7 +9,7 @@ var Sequelize = require('sequelize');
 
 function db_init(sequelize) {
   // 用户信息表
-  var Menu = sequelize.define('menu', {
+  var GM_Menu = sequelize.define('gm_menu', {
     
       id: {
         type: Sequelize.BIGINT(20),
@@ -102,6 +102,16 @@ function db_init(sequelize) {
         
       },
     
+      indexNo: {
+        type: Sequelize.INTEGER(5),
+        allowNull: false,
+        unique: false,
+        field: "indexNo",
+        defaultValue: 0,
+        comment: "排序",
+        
+      },
+    
   }, {
     freezeTableName: true,
     timestamps: true,
@@ -110,11 +120,11 @@ function db_init(sequelize) {
     ],
   });
 
-  Menu.sync();
+  GM_Menu.sync();
 
-  return Menu;
+  return GM_Menu;
 }
 
-exports.Menu = function (sequelize) {
+exports.GM_Menu = function (sequelize) {
   return db_init(sequelize);
 };

@@ -1,5 +1,5 @@
 /**
- * User.js
+ * UserInfo.js
  * Created by auto tool.
  */
 
@@ -9,13 +9,13 @@ var Sequelize = require('sequelize');
 
 function db_init(sequelize) {
   // 用户信息表
-  var User = sequelize.define('user', {
+  var UserInfo = sequelize.define('userinfo', {
     
-      id: {
+      uid: {
         type: Sequelize.BIGINT(20),
         allowNull: false,
         unique: true,
-        field: "id",
+        field: "uid",
         
         comment: "唯一ID",
         primaryKey: true,
@@ -29,6 +29,26 @@ function db_init(sequelize) {
         field: "username",
         defaultValue: "",
         comment: "用户名",
+        
+      },
+    
+      email: {
+        type: Sequelize.STRING(40),
+        allowNull: false,
+        unique: true,
+        field: "email",
+        defaultValue: "",
+        comment: "邮箱",
+        
+      },
+    
+      telephone: {
+        type: Sequelize.STRING(15),
+        allowNull: false,
+        unique: true,
+        field: "telephone",
+        defaultValue: "0",
+        comment: "手机号",
         
       },
     
@@ -52,13 +72,13 @@ function db_init(sequelize) {
         
       },
     
-      role: {
-        type: Sequelize.INTEGER(5),
+      img: {
+        type: Sequelize.STRING(30),
         allowNull: true,
         unique: false,
-        field: "role",
-        defaultValue: 0,
-        comment: "角色",
+        field: "img",
+        defaultValue: "",
+        comment: "头像",
         
       },
     
@@ -80,15 +100,23 @@ function db_init(sequelize) {
         unique: true,
         fields: ['username','password',]
       },
+      {
+        unique: true,
+        fields: ['email','password',]
+      },
+      {
+        unique: true,
+        fields: ['telephone','password',]
+      },
       
     ],
   });
 
-  User.sync();
+  UserInfo.sync();
 
-  return User;
+  return UserInfo;
 }
 
-exports.User = function (sequelize) {
+exports.UserInfo = function (sequelize) {
   return db_init(sequelize);
 };

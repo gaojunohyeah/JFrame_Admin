@@ -26,6 +26,15 @@ module.exports = {
   DB_maxpool: 5,
   DB_minpool: 0,
 
+  DB_SERVER_dbname: 'jframe',
+  DB_SERVER_username: 'root',
+  DB_SERVER_password: '',
+  DB_SERVER_host: 'localhost',
+  DB_SERVER_port: 3306,
+  DB_SERVER_dialect: 'mysql',
+  DB_SERVER_maxpool: 5,
+  DB_SERVER_minpool: 0,
+
   // redis相关参数
   RD_host: 'localhost',
   RD_port: 14001,

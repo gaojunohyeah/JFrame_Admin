@@ -1,5 +1,5 @@
 /**
- * MenuManager.js
+ * GM_MenuManager.js
  * Created by auto tool.
  */
 
@@ -12,18 +12,18 @@ var BaseManager = require(config.serverRoot + '/manager/base/BaseManager');
  *
  * @constructor
  */
-var MenuManager = function () {
+var GM_MenuManager = function () {
   var _this = this;
 
   /**
    * 查询所有菜单数据
    */
   this.getAll = function () {
-    return JF.dao.MenuDao.queryAll();
+    return JF.dao.GM_MenuDao.queryList(null, false);
   };
 };
 
 // 添加继承
-util.inherits(MenuManager, BaseManager);
+util.inherits(GM_MenuManager, BaseManager);
 
-module.exports = new MenuManager();
+module.exports = new GM_MenuManager();

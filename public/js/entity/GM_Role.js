@@ -4,12 +4,14 @@
 
 'use strict';
 
-var role = nga.entity('role');
+var GM_Role = nga.entity('GM_Role');
 
-role.listView().fields([
+// list
+GM_Role.listView().fields([
   nga.field('id'),
   nga.field('name'),
   nga.field('menu')
 ]);
 
-module.exports = role;
+
+module.exports = GM_Role;

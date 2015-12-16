@@ -16,9 +16,9 @@ module.exports = function (nga) {
   // add entities
   admin.addEntity(require('./userinfo'));
 
-  admin.addEntity(require('./role'));
-  admin.addEntity(require('./menu'));
-  admin.addEntity(require('./user'));
+  admin.addEntity(require('./GM_Role'));
+  admin.addEntity(require('./GM_Menu'));
+  admin.addEntity(require('./GM_User'));
 
   // 页头
   admin.header(require('../../views/header.html'));
