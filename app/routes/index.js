@@ -1,4 +1,8 @@
 var express = require('express');
+var multiparty = require('multiparty');
+var util = require('util');
+var fs = require('fs');
+
 var router = express.Router();
 
 var login = require(config.serverRoot + '/api/user/Login');
@@ -56,7 +60,7 @@ router.post('/logout', function (req, res, next) {
 });
 
 
-router.all('/data/*', function (req, res, next) {
+router.all('/*/*', function (req, res, next) {
   // TODO 登陆session验证
   if (!req.session.userId) {
     var err = new Error('need login first!');
@@ -88,7 +92,7 @@ router.get('/data/:module', function (req, res, next) {
     //}
     //// 从gm数据库获取
     //else {
-      modelGetList(res, req.query, mName);
+    modelGetList(res, req.query, mName);
     //}
   }
 
@@ -113,7 +117,7 @@ router.post('/data/:module', function (req, res, next) {
   //}
   //// 从gm数据库获取
   //else {
-    modelAdd(res, req.body, mName);
+  modelAdd(res, req.body, mName);
   //}
 });
 
@@ -136,7 +140,7 @@ router.get('/data/:module/:id', function (req, res, next) {
   //}
   //// 从gm数据库获取
   //else {
-    modelGet(res, mName, id);
+  modelGet(res, mName, id);
   //}
 });
 
@@ -159,7 +163,7 @@ router.put('/data/:module/:id', function (req, res, next) {
   //}
   //// 从gm数据库获取
   //else {
-    modelUpdate(res, req.body, mName, id);
+  modelUpdate(res, req.body, mName, id);
   //}
 });
 
@@ -182,8 +186,51 @@ router.delete('/data/:module/:id', function (req, res, next) {
   //}
   //// 从gm数据库获取
   //else {
-    modelDelete(res, mName, id);
+  modelDelete(res, mName, id);
   //}
+});
+
+/**
+ *  上传文件
+ */
+router.post('/file/upload', function (req, res, next) {
+  //生成multiparty对象，并配置上传目标路径
+  var form = new multiparty.Form({uploadDir: config.uploadPath});
+  //上传完成后处理
+  form.parse(req, function (err, fields, files) {
+    var filesTmp = JSON.stringify(files, null, 2);
+
+    // 上传失败
+    if (err) {
+      console.log('parse error: ' + err);
+      var error = new Error('file upload error!');
+      error.status = 500;
+      return next(error);
+    }
+    // 上传成功
+    else {
+      console.log('parse files: ' + filesTmp);
+      var inputFile = files.file[0];
+      //var uploadedPath = inputFile.path;
+      //var dstPath = './public/files/' + inputFile.originalFilename;
+      //重命名为真实文件名
+      //fs.rename(uploadedPath, dstPath, function (err) {
+      //  if (err) {
+      //    console.log('rename error: ' + err);
+      //  } else {
+      //    console.log('rename ok');
+      //  }
+      //});
+      // 获取临时文件名
+      var cacheFileName = inputFile.path.substring(inputFile.path.lastIndexOf('/') + 1);
+
+      //// 缓存到redis(真正保存数据的时候会使用)
+      //JF.dbs.redis.hset(RD_file_key, cacheFileName, inputFile.originalFilename);
+      //JF.dbs.redis.expire(tableName, config.RD_file_expire);
+
+      JF.util.http.resBack(res, {file_name: cacheFileName})
+    }
+  });
 });
 
 

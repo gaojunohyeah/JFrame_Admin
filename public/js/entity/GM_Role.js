@@ -7,7 +7,10 @@
 var GM_Role = nga.entity('GM_Role');
 
 // list
-GM_Role.listView().fields([
+GM_Role.listView()
+  .perPage(config.default_perpage)
+  .sortDir(config.default_order)
+  .fields([
   nga.field('id'),
   nga.field('name'),
   nga.field('menu')

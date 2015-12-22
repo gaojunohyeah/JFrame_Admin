@@ -15,6 +15,11 @@ var menuSrv = function ($rootScope, authSrv, localStorageService) {
     return menus;
   }
 
+  function sortMenu(m1, m2) {
+    return m1.indexNo - m2.indexNo;
+  }
+
+
   function reloadMenu() {
     // 获取用户角色及对应菜单权限
     var roleInfo = authSrv.getRoleInfo();
@@ -36,6 +41,7 @@ var menuSrv = function ($rootScope, authSrv, localStorageService) {
         sonMenus['' + menuItem.parent].push(menuItem)
       }
     });
+    fatherMenus = fatherMenus.sort(sortMenu);
 
     // 获取menu对象
     var menu = nga.menu();
@@ -73,39 +79,43 @@ var menuSrv = function ($rootScope, authSrv, localStorageService) {
         }
         fmenu.title(fatherMenu.name);
 
-        //// 子菜单
-        _.forEach(sonMenus['' + fatherMenu.id], function (sonMenu) {
-          var smenu;
-          // 绑定实体
-          if (1 == sonMenu.isEntity) {
-            smenu = nga.menu(nga.entity(sonMenu.key));
-          } else {
-            smenu = nga.menu();
-            if (_.isUndefined(sonMenu.link)
-              || _.isNull(sonMenu.link)
-              || _.isEqual('', sonMenu.link)) {
-              //smenu.link('');
+        // 子菜单
+        var subMenus = sonMenus['' + fatherMenu.id];
+        if (!_.isUndefined(subMenus) && !_.isNull(subMenus)) {
+          subMenus = sonMenus['' + fatherMenu.id].sort(sortMenu);
+          _.forEach(subMenus, function (sonMenu) {
+            var smenu;
+            // 绑定实体
+            if (1 == sonMenu.isEntity) {
+              smenu = nga.menu(nga.entity(sonMenu.key));
             } else {
-              smenu.link(sonMenu.link);
+              smenu = nga.menu();
+              if (_.isUndefined(sonMenu.link)
+                || _.isNull(sonMenu.link)
+                || _.isEqual('', sonMenu.link)) {
+                //smenu.link('');
+              } else {
+                smenu.link(sonMenu.link);
+              }
+
+              if (_.isUndefined(sonMenu.icon)
+                || _.isNull(sonMenu.icon)
+                || _.isEqual('', sonMenu.icon)) {
+                smenu.icon('<span class="glyphicon glyphicon-list ng-scope"></span>');
+              } else {
+                smenu.icon('<span class="' + sonMenu.icon + '"></span>');
+              }
+
+              smenu.active(function (path) {
+                return path.indexOf('/null') === 0;
+              });
             }
+            smenu.title(sonMenu.name);
 
-            if (_.isUndefined(sonMenu.icon)
-              || _.isNull(sonMenu.icon)
-              || _.isEqual('', sonMenu.icon)) {
-              smenu.icon('<span class="glyphicon glyphicon-list ng-scope"></span>');
-            } else {
-              smenu.icon('<span class="' + sonMenu.icon + '"></span>');
-            }
-
-            smenu.active(function (path) {
-              return path.indexOf('/null') === 0;
-            });
-          }
-          smenu.title(sonMenu.name);
-
-          fmenu.addChild(smenu);
-          //fmenu.addChild(nga.menu(nga.entity('userinfo')).title('用户管理'));
-        });
+            fmenu.addChild(smenu);
+            //fmenu.addChild(nga.menu(nga.entity('userinfo')).title('用户管理'));
+          });
+        }
 
         menu.addChild(fmenu);
       }

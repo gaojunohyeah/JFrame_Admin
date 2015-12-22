@@ -105,6 +105,11 @@ BaseDao.prototype.queryList = function (query, needEntity, _page, _perPage, _sor
     where: {},
   };
 
+  // 查询条件
+  if (!_.isUndefined(query) && !_.isNull(query) && !_.isEmpty(query)) {
+    params.where = query;
+  }
+
   // 不需要实体
   if (!needEntity) {
     params.raw = !needEntity;

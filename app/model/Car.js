@@ -103,11 +103,11 @@ function db_init(sequelize) {
       },
     
       startTime: {
-        type: Sequelize.BIGINT(11),
+        type: Sequelize.STRING(10),
         allowNull: true,
         unique: false,
         field: "startTime",
-        defaultValue: 0,
+        defaultValue: "",
         comment: "上牌时间",
         
       },

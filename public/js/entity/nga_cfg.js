@@ -13,8 +13,13 @@ module.exports = function (nga) {
   global.admin = admin;
   global.nga = nga;
 
-  // add entities
-  admin.addEntity(require('./userinfo'));
+  // add entities (有先后加载关系，依赖方需要在被依赖方后加载，否则会出错)
+  admin.addEntity(require('./Brand'));
+  admin.addEntity(require('./City'));
+  admin.addEntity(require('./CarType'));
+  admin.addEntity(require('./CarModel'));
+  admin.addEntity(require('./UserInfo'));
+  admin.addEntity(require('./Car'));
 
   admin.addEntity(require('./GM_Role'));
   admin.addEntity(require('./GM_Menu'));

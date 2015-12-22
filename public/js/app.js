@@ -9,7 +9,7 @@
  * @type {*|exports|module.exports}
  */
 global.config = require('./base/config');
-global.enum = require('./enum/enum');
+global.enums = require('./enum/enum');
 
 var dep_vars = [
   'ng-admin',

@@ -30,4 +30,9 @@ module.exports = {
    * 默认排序方式,ASC升序
    */
   default_order: "ASC", // DESC
+
+  default_file_upload: {
+    'url': '/file/upload',
+    'apifilename': 'file_name'
+  }
 };

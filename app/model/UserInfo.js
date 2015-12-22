@@ -11,11 +11,11 @@ function db_init(sequelize) {
   // 用户信息表
   var UserInfo = sequelize.define('userinfo', {
     
-      uid: {
+      id: {
         type: Sequelize.BIGINT(20),
         allowNull: false,
         unique: true,
-        field: "uid",
+        field: "id",
         
         comment: "唯一ID",
         primaryKey: true,

@@ -64,7 +64,7 @@
 	 * @type {*|exports|module.exports}
 	 */
 	global.config = __webpack_require__(19);
-	global['enum'] = __webpack_require__(23);
+	global.enums = __webpack_require__(23);
 
 	var dep_vars = ['ng-admin', 'ngCookies', 'http-auth-interceptor', 'LocalStorageModule'];
 
@@ -926,8 +926,13 @@
 	  /**
 	   * 默认排序方式,ASC升序
 	   */
-	  default_order: "ASC" };
-	// DESC
+	  default_order: "ASC", // DESC
+
+	  default_file_upload: {
+	    'url': '/file/upload',
+	    'apifilename': 'file_name'
+	  }
+	};
 
 /***/ },
 /* 20 */,
@@ -948,8 +953,13 @@
 	  global.admin = admin;
 	  global.nga = nga;
 
-	  // add entities
-	  admin.addEntity(__webpack_require__(22));
+	  // add entities (有先后加载关系，依赖方需要在被依赖方后加载，否则会出错)
+	  admin.addEntity(__webpack_require__(36));
+	  admin.addEntity(__webpack_require__(39));
+	  admin.addEntity(__webpack_require__(38));
+	  admin.addEntity(__webpack_require__(37));
+	  admin.addEntity(__webpack_require__(35));
+	  admin.addEntity(__webpack_require__(42));
 
 	  admin.addEntity(__webpack_require__(33));
 	  admin.addEntity(__webpack_require__(32));
@@ -966,22 +976,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 22 */
-/***/ function(module, exports) {
-
-	/**
-	 * Created by gaojun on 15/12/11.
-	 */
-
-	'use strict';
-
-	var userinfo = nga.entity('userinfo');
-
-	userinfo.listView().fields([nga.field('name'), nga.field('username'), nga.field('email')]);
-
-	module.exports = userinfo;
-
-/***/ },
+/* 22 */,
 /* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -992,7 +987,9 @@
 	'use strict';
 
 	module.exports = {
-	  ret: __webpack_require__(24)
+	  base: __webpack_require__(41),
+	  ret: __webpack_require__(24),
+	  area: __webpack_require__(40)
 	};
 
 /***/ },
@@ -1077,6 +1074,10 @@
 	    return menus;
 	  }
 
+	  function sortMenu(m1, m2) {
+	    return m1.indexNo - m2.indexNo;
+	  }
+
 	  function reloadMenu() {
 	    // 获取用户角色及对应菜单权限
 	    var roleInfo = authSrv.getRoleInfo();
@@ -1098,6 +1099,7 @@
 	          sonMenus['' + menuItem.parent].push(menuItem);
 	        }
 	    });
+	    fatherMenus = fatherMenus.sort(sortMenu);
 
 	    // 获取menu对象
 	    var menu = nga.menu();
@@ -1131,35 +1133,39 @@
 	        }
 	        fmenu.title(fatherMenu.name);
 
-	        //// 子菜单
-	        _.forEach(sonMenus['' + fatherMenu.id], function (sonMenu) {
-	          var smenu;
-	          // 绑定实体
-	          if (1 == sonMenu.isEntity) {
-	            smenu = nga.menu(nga.entity(sonMenu.key));
-	          } else {
-	            smenu = nga.menu();
-	            if (_.isUndefined(sonMenu.link) || _.isNull(sonMenu.link) || _.isEqual('', sonMenu.link)) {
-	              //smenu.link('');
+	        // 子菜单
+	        var subMenus = sonMenus['' + fatherMenu.id];
+	        if (!_.isUndefined(subMenus) && !_.isNull(subMenus)) {
+	          subMenus = sonMenus['' + fatherMenu.id].sort(sortMenu);
+	          _.forEach(subMenus, function (sonMenu) {
+	            var smenu;
+	            // 绑定实体
+	            if (1 == sonMenu.isEntity) {
+	              smenu = nga.menu(nga.entity(sonMenu.key));
 	            } else {
-	                smenu.link(sonMenu.link);
+	              smenu = nga.menu();
+	              if (_.isUndefined(sonMenu.link) || _.isNull(sonMenu.link) || _.isEqual('', sonMenu.link)) {
+	                //smenu.link('');
+	              } else {
+	                  smenu.link(sonMenu.link);
+	                }
+
+	              if (_.isUndefined(sonMenu.icon) || _.isNull(sonMenu.icon) || _.isEqual('', sonMenu.icon)) {
+	                smenu.icon('<span class="glyphicon glyphicon-list ng-scope"></span>');
+	              } else {
+	                smenu.icon('<span class="' + sonMenu.icon + '"></span>');
 	              }
 
-	            if (_.isUndefined(sonMenu.icon) || _.isNull(sonMenu.icon) || _.isEqual('', sonMenu.icon)) {
-	              smenu.icon('<span class="glyphicon glyphicon-list ng-scope"></span>');
-	            } else {
-	              smenu.icon('<span class="' + sonMenu.icon + '"></span>');
+	              smenu.active(function (path) {
+	                return path.indexOf('/null') === 0;
+	              });
 	            }
+	            smenu.title(sonMenu.name);
 
-	            smenu.active(function (path) {
-	              return path.indexOf('/null') === 0;
-	            });
-	          }
-	          smenu.title(sonMenu.name);
-
-	          fmenu.addChild(smenu);
-	          //fmenu.addChild(nga.menu(nga.entity('userinfo')).title('用户管理'));
-	        });
+	            fmenu.addChild(smenu);
+	            //fmenu.addChild(nga.menu(nga.entity('userinfo')).title('用户管理'));
+	          });
+	        }
 
 	        menu.addChild(fmenu);
 	      }
@@ -1203,7 +1209,7 @@
 	var GM_Menu = nga.entity('GM_Menu');
 
 	// list
-	GM_Menu.listView().title('Comments').perPage(config.default_perpage).sortDir(config.default_order).fields([nga.field('id').label('ID'), nga.field('name').label('菜单名称'), nga.field('key').label('实体key'),
+	GM_Menu.listView().perPage(config.default_perpage).sortDir(config.default_order).fields([nga.field('id').label('ID'), nga.field('name').label('菜单名称'), nga.field('key').label('实体key'),
 	//nga.field('menu')
 	//  .title('菜单层级'),
 	nga.field('parent', 'reference').label('父菜单').targetEntity(GM_Menu).targetField(nga.field('name')), nga.field('isEntity', 'choice').label('绑定实体').choices([{ label: '否', value: 0 }, { label: '是', value: 1 }]), nga.field('indexNo').label('排序')]).listActions(['edit', 'delete']);
@@ -1220,7 +1226,7 @@
 	nga.field('parent', 'number').label('父菜单id').attributes({ value: 0, placeholder: '没有父菜单则填0' }), nga.field('isEntity', 'choice').label('绑定实体').choices([{ label: '否', value: 0 }, { label: '是', value: 1 }]).validation({ required: true }), nga.field('link').label('关联页面').attributes({ placeholder: '如果绑定了实体则不填' }), nga.field('active').label('激活').attributes({ placeholder: '激活' }), nga.field('icon').label('图标').attributes({ placeholder: 'css class名称,多个用空格分隔' }), nga.field('indexNo', 'number').label('排序').validation({ required: true })]);
 
 	// edit
-	GM_Menu.editionView().title('Edit menu').actions(['list', 'delete']).fields([nga.field('id').label('菜单id').editable(false), nga.field('name').label('菜单名称').validation({ required: true, minlength: 1, maxlength: 20 }), nga.field('key').label('实体key').attributes({ placeholder: '绑定的实体key' }).validation({ minlength: 1, maxlength: 20 }), nga.field('parent', 'number').label('父菜单id').attributes({ value: 0, placeholder: '没有父菜单则填0' }), nga.field('isEntity', 'choice').label('绑定实体').choices([{ label: '否', value: 0 }, { label: '是', value: 1 }]).validation({ required: true }), nga.field('link').label('关联页面').attributes({ placeholder: '如果绑定了实体则不填' }), nga.field('active').label('激活').attributes({ placeholder: '激活' }), nga.field('icon').label('图标').attributes({ placeholder: 'css class名称,多个用空格分隔' }), nga.field('indexNo', 'number').label('排序').validation({ required: true })]);
+	GM_Menu.editionView().actions(['list', 'delete']).fields([nga.field('id').label('菜单id').editable(false), nga.field('name').label('菜单名称').validation({ required: true, minlength: 1, maxlength: 20 }), nga.field('key').label('实体key').attributes({ placeholder: '绑定的实体key' }).validation({ minlength: 1, maxlength: 20 }), nga.field('parent', 'number').label('父菜单id').attributes({ value: 0, placeholder: '没有父菜单则填0' }), nga.field('isEntity', 'choice').label('绑定实体').choices([{ label: '否', value: 0 }, { label: '是', value: 1 }]).validation({ required: true }), nga.field('link').label('关联页面').attributes({ placeholder: '如果绑定了实体则不填' }), nga.field('active').label('激活').attributes({ placeholder: '激活' }), nga.field('icon').label('图标').attributes({ placeholder: 'css class名称,多个用空格分隔' }), nga.field('indexNo', 'number').label('排序').validation({ required: true })]);
 
 	module.exports = GM_Menu;
 
@@ -1237,7 +1243,7 @@
 	var GM_Role = nga.entity('GM_Role');
 
 	// list
-	GM_Role.listView().fields([nga.field('id'), nga.field('name'), nga.field('menu')]);
+	GM_Role.listView().perPage(config.default_perpage).sortDir(config.default_order).fields([nga.field('id'), nga.field('name'), nga.field('menu')]);
 
 	module.exports = GM_Role;
 
@@ -1253,7 +1259,7 @@
 
 	var GM_User = nga.entity('GM_User');
 
-	GM_User.listView().fields([nga.field('id'), nga.field('username'), nga.field('nickname'), nga.field('role', 'reference').label('Role').targetEntity(admin.getEntity('GM_Role')).targetField(nga.field('name')), nga.field('state')]);
+	GM_User.listView().perPage(config.default_perpage).sortDir(config.default_order).fields([nga.field('id'), nga.field('username'), nga.field('nickname'), nga.field('role', 'reference').label('Role').targetEntity(admin.getEntity('GM_Role')).targetField(nga.field('name')), nga.field('state')]);
 
 	// add
 	GM_User.creationView().fields([nga.field('username').label('gm账号').validation({ required: true, minlength: 3, maxlength: 20 }), nga.field('password', 'password').label('gm密码').validation({ required: true }), nga.field('nickname').label('昵称').validation({ required: true, minlength: 1, maxlength: 20 }), nga.field('role', 'reference').label('角色').targetEntity(admin.getEntity('GM_Role')).targetField(nga.field('name')).validation({ required: true }), nga.field('state', 'choice').label('状态').choices([{ label: '禁用', value: 0 }, { label: '正常', value: 1 }]).validation({ required: true })]);
@@ -1262,6 +1268,261 @@
 	GM_User.editionView().actions(['list', 'delete']).fields([nga.field('id').label('gm用户id').editable(false), nga.field('username').label('gm账号').editable(false), nga.field('nickname').label('昵称').validation({ required: true, minlength: 1, maxlength: 20 }), nga.field('role', 'reference').label('角色').targetEntity(admin.getEntity('GM_Role')).targetField(nga.field('name')).validation({ required: true }), nga.field('state', 'choice').label('状态').choices([{ label: '禁用', value: 0 }, { label: '正常', value: 1 }]).validation({ required: true })]);
 
 	module.exports = GM_User;
+
+/***/ },
+/* 35 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by gaojun on 15/12/11.
+	 */
+
+	'use strict';
+
+	var UserInfo = nga.entity('UserInfo');
+
+	// list
+	UserInfo.listView().perPage(config.default_perpage).sortDir(config.default_order).fields([nga.field('username').label('账号'), nga.field('email').label('邮箱'), nga.field('telephone').label('手机号'), nga.field('nickname').label('昵称'), nga.field('img').label('头像'), nga.field('state', 'choice').label('状态').choices([{ label: '禁用', value: 0 }, { label: '正常', value: 1 }])]).listActions(['edit', 'delete']).filters([nga.field('username').label('账号'), nga.field('email', 'email').label('邮箱'), nga.field('telephone').label('手机号'), nga.field('nickname').label('昵称')]);
+
+	// edit
+	UserInfo.editionView().actions(['list', 'delete']).fields([nga.field('username').label('账号'), nga.field('email', 'email').label('邮箱'), nga.field('telephone', 'number').label('手机号'), nga.field('nickname').label('昵称').validation({ required: true, minlength: 1, maxlength: 20 }), nga.field('img').label('头像'), nga.field('state', 'choice').label('状态').choices([{ label: '禁用', value: 0 }, { label: '正常', value: 1 }]).validation({ required: true })]);
+
+	module.exports = UserInfo;
+
+/***/ },
+/* 36 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by gaojun on 15/12/11.
+	 */
+
+	'use strict';
+
+	var Brand = nga.entity('Brand');
+
+	var letterChoice = [];
+	_.forEach(enums.base.letter, function (value, key) {
+	  var c = {
+	    label: key,
+	    value: value
+	  };
+
+	  letterChoice.push(c);
+	});
+
+	// list
+	Brand.listView().perPage(config.default_perpage).sortDir(config.default_order).fields([nga.field('name').label('品牌名称'), nga.field('letter', 'choice').label('首字母').choices(letterChoice)]).listActions(['edit', 'delete']).filters([nga.field('name').label('品牌名称'), nga.field('letter', 'choice').label('首字母').choices(letterChoice)]);
+
+	// add
+	Brand.creationView().fields([nga.field('name').label('品牌名称').validation({ required: true }), nga.field('letter', 'choice').label('首字母').choices(letterChoice).validation({ required: true })]);
+
+	// edit
+	Brand.editionView().actions(['list', 'delete']).fields([nga.field('name').label('品牌名称').validation({ required: true }), nga.field('letter', 'choice').label('首字母').choices(letterChoice).validation({ required: true })]);
+
+	module.exports = Brand;
+
+/***/ },
+/* 37 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by gaojun on 15/12/11.
+	 */
+
+	'use strict';
+
+	var CarModel = nga.entity('CarModel');
+
+	// list
+	CarModel.listView().perPage(config.default_perpage).sortDir(config.default_order).fields([nga.field('brandId', 'reference').label('品牌名').targetEntity(admin.getEntity('Brand')).targetField(nga.field('name')), nga.field('name').label('型号名称'), nga.field('carType', 'reference').label('车型').targetEntity(admin.getEntity('CarType')).targetField(nga.field('name')), nga.field('engine').label('发动机')]).listActions(['edit', 'delete']).filters([nga.field('brandId', 'reference').label('品牌名').targetEntity(admin.getEntity('Brand')).targetField(nga.field('name')), nga.field('name').label('型号名称'), nga.field('carType', 'reference').label('车型').targetEntity(admin.getEntity('CarType')).targetField(nga.field('name'))]);
+
+	// add
+	CarModel.creationView().fields([nga.field('brandId', 'reference').label('品牌名').targetEntity(admin.getEntity('Brand')).targetField(nga.field('name')).validation({ required: true }), nga.field('name').label('型号名称').validation({ required: true }), nga.field('carType', 'reference').label('车型').targetEntity(admin.getEntity('CarType')).targetField(nga.field('name')).validation({ required: true }), nga.field('engine').label('发动机').validation({ required: true })]);
+
+	// edit
+	CarModel.editionView().actions(['list', 'delete']).fields([nga.field('brandId', 'reference').label('品牌名').targetEntity(admin.getEntity('Brand')).targetField(nga.field('name')).validation({ required: true }), nga.field('name').label('型号名称').validation({ required: true }), nga.field('carType', 'reference').label('车型').targetEntity(admin.getEntity('CarType')).targetField(nga.field('name')).validation({ required: true }), nga.field('engine').label('发动机').validation({ required: true })]);
+
+	module.exports = CarModel;
+
+/***/ },
+/* 38 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by gaojun on 15/12/11.
+	 */
+
+	'use strict';
+
+	var CarType = nga.entity('CarType');
+
+	// list
+	CarType.listView().perPage(config.default_perpage).sortDir(config.default_order).fields([nga.field('name').label('车型名称')]).listActions(['edit', 'delete']);
+
+	// add
+	CarType.creationView().fields([nga.field('name').label('车型名称').validation({ required: true })]);
+
+	// edit
+	CarType.editionView().actions(['list', 'delete']).fields([nga.field('name').label('车型名称').validation({ required: true })]);
+
+	module.exports = CarType;
+
+/***/ },
+/* 39 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by gaojun on 15/12/11.
+	 */
+
+	'use strict';
+
+	var City = nga.entity('City');
+
+	var areaChoice = [];
+	_.forEach(enums.area, function (value, key) {
+	  var c = {
+	    label: value.name,
+	    value: value.value
+	  };
+
+	  areaChoice.push(c);
+	});
+
+	// list
+	City.listView().perPage(config.default_perpage).sortDir(config.default_order).fields([nga.field('name').label('城市名'), nga.field('area', 'choice').label('地域').choices(areaChoice)]).listActions(['edit', 'delete']).filters([nga.field('name').label('城市名'), nga.field('area', 'choice').label('地域').choices(areaChoice)]);
+
+	// add
+	City.creationView().fields([nga.field('name').label('城市名').validation({ required: true }), nga.field('area', 'choice').label('地域').choices(areaChoice).validation({ required: true })]);
+
+	// edit
+	City.editionView().actions(['list', 'delete']).fields([nga.field('name').label('城市名').validation({ required: true }), nga.field('area', 'choice').label('地域').choices(areaChoice).validation({ required: true })]);
+
+	module.exports = City;
+
+/***/ },
+/* 40 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by gaojun on 15/11/3.
+	 */
+
+	'use strict';
+
+	module.exports = {
+	  HUABEI: {
+	    value: 1,
+	    name: '华北'
+	  },
+	  DONGBEI: {
+	    value: 2,
+	    name: '东北'
+	  },
+	  HUADONG: {
+	    value: 3,
+	    name: '华东'
+	  },
+	  HUAZHONG: {
+	    value: 4,
+	    name: '华中'
+	  },
+	  HUANAN: {
+	    value: 5,
+	    name: '华南'
+	  },
+	  XIBU: {
+	    value: 6,
+	    name: '西部'
+	  }
+	};
+
+/***/ },
+/* 41 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by gaojun on 15/11/3.
+	 */
+
+	'use strict';
+
+	var letter = {
+	  A: 1,
+	  B: 2,
+	  C: 3,
+	  D: 4,
+	  E: 5,
+	  F: 6,
+	  G: 7,
+	  H: 8,
+	  I: 9,
+	  J: 10,
+	  K: 11,
+	  L: 12,
+	  M: 13,
+	  N: 14,
+	  O: 15,
+	  P: 16,
+	  Q: 17,
+	  R: 18,
+	  S: 19,
+	  T: 20,
+	  U: 21,
+	  V: 22,
+	  W: 23,
+	  X: 24,
+	  Y: 25,
+	  Z: 26
+	};
+
+	module.exports = {
+	  letter: letter
+	};
+
+/***/ },
+/* 42 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by gaojun on 15/12/11.
+	 */
+
+	'use strict';
+
+	var Car = nga.entity('Car');
+
+	// list
+	Car.listView().fields([nga.field('sellId', 'reference').label('车主').targetEntity(admin.getEntity('UserInfo')).targetField(nga.field('nickname')), nga.field('appraiserId', 'reference').label('评估师').targetEntity(admin.getEntity('UserInfo')).targetField(nga.field('nickname')), nga.field('brandId', 'reference').label('品牌').targetEntity(admin.getEntity('Brand')).targetField(nga.field('name')), nga.field('modelId', 'reference').label('车辆型号').targetEntity(admin.getEntity('CarModel')).targetField(nga.field('name')), nga.field('price', 'number').label('价格(万)'), nga.field('city', 'reference').label('城市').targetEntity(admin.getEntity('City')).targetField(nga.field('name'))]).listActions(['edit', 'delete']).filters([nga.field('sellId').label('车主id'), nga.field('sellUserName').label('车主账号'), nga.field('appraiserName').label('评估师'), nga.field('brandId', 'reference').label('品牌').targetEntity(admin.getEntity('Brand')).targetField(nga.field('name')), nga.field('modelName').label('车辆型号'), nga.field('price', 'number').label('价格'), nga.field('city', 'reference').label('城市').targetEntity(admin.getEntity('City')).targetField(nga.field('name'))]);
+
+	// add
+	Car.creationView().fields([nga.field('sellId') //, 'reference')
+	.label('车主')
+	//.targetEntity(admin.getEntity('UserInfo'))
+	//.targetField(nga.field('nickname'))
+	.validation({ required: true }), nga.field('sellDesc', 'wysiwyg').label('车主描述').validation({ required: true }), nga.field('appraiserId') //, 'reference')
+	.label('评估师')
+	//.targetEntity(admin.getEntity('UserInfo'))
+	//.targetField(nga.field('nickname'))
+	.validation({ required: true }), nga.field('appraiserDesc', 'wysiwyg').label('评估师描述').validation({ required: true }), nga.field('brandId', 'reference').label('品牌').targetEntity(admin.getEntity('Brand')).targetField(nga.field('name')).validation({ required: true }), nga.field('modelId', 'reference').label('车辆型号').targetEntity(admin.getEntity('CarModel')).targetField(nga.field('name')).validation({ required: true }), nga.field('price', 'number').label('价格(万)').validation({ required: true }), nga.field('distance', 'number').label('行驶里程(公里)').validation({ required: true }), nga.field('startTime', 'date').label('上牌时间').validation({ required: true }), nga.field('city', 'reference').label('城市').targetEntity(admin.getEntity('City')).targetField(nga.field('name')).validation({ required: true }), nga.field('showImg', 'file').label('展示图片').uploadInformation(config.default_file_upload), nga.field('tag', 'choices').label('特殊标签')]);
+
+	// edit
+	Car.editionView().actions(['list', 'delete']).fields([nga.field('sellId') //, 'reference')
+	.label('车主')
+	//.targetEntity(admin.getEntity('UserInfo'))
+	//.targetField(nga.field('nickname'))
+	.validation({ required: true }), nga.field('sellDesc', 'wysiwyg').label('车主描述').validation({ required: true }), nga.field('appraiserId') //, 'reference')
+	.label('评估师')
+	//.targetEntity(admin.getEntity('UserInfo'))
+	//.targetField(nga.field('nickname'))
+	.validation({ required: true }), nga.field('appraiserDesc', 'wysiwyg').label('评估师描述').validation({ required: true }), nga.field('brandId', 'reference').label('品牌').targetEntity(admin.getEntity('Brand')).targetField(nga.field('name')).validation({ required: true }), nga.field('modelId', 'reference').label('车辆型号').targetEntity(admin.getEntity('CarModel')).targetField(nga.field('name')).validation({ required: true }), nga.field('price', 'number').label('价格(万)').validation({ required: true }), nga.field('distance', 'number').label('行驶里程(公里)').validation({ required: true }), nga.field('startTime', 'date').label('上牌时间').validation({ required: true }), nga.field('city', 'reference').label('城市').targetEntity(admin.getEntity('City')).targetField(nga.field('name')).validation({ required: true }),
+	//nga.field('showImg', 'file')
+	//  .label('展示图片')
+	//  .uploadInformation(config.default_file_upload),
+	nga.field('tag', 'choices').label('特殊标签')]);
+
+	module.exports = Car;
 
 /***/ }
 /******/ ]);

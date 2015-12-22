@@ -11,3 +11,5 @@ exports.http = require(config.serverRoot + '/util/HttpUtil');
 exports.check = require(config.serverRoot + '/util/CheckUtil');
 
 exports.crypto = require(config.serverRoot + '/util/CryptoUtil');
+
+exports.db = require(config.serverRoot + '/util/DbUtil');

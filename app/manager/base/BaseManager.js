@@ -8,6 +8,14 @@ var BaseManager = function () {
 };
 
 /**
+ * 查询时的特殊参数处理
+ * @type {{}}
+ * :: key 参数键值
+ * :: opt 参数操作符 eg: queryParam = {'startTime':'$gte'}
+ */
+BaseManager.prototype.queryParam = {};
+
+/**
  * 查询列表接口
  *
  * @param res response对象
@@ -19,11 +27,27 @@ var BaseManager = function () {
  * @param _order 排序方式
  */
 BaseManager.prototype.getList = function (res, query, mname, _page, _perPage, _sort, _order) {
+  var _this = this;
   var mdao = JF.dao[mname + "Dao"];
 
   // 根据条件查询数据
   var queryList = function () {
-    return mdao.queryList(query, false, _page, _perPage, _sort, _order)
+    // 处理查询条件
+    var qp = {};
+    _.forEach(query, function (value, key) {
+      var opt = JF.enums.db.e;
+      if (!_.isUndefined(_this.queryParam[key]) && !_.isNull(_this.queryParam[key])) {
+        opt = _this.queryParam[key];
+      }
+
+      // 根据操作符进行条件拼写
+      var param = JF.util.db.buildQueryParam(value, opt);
+      if (!_.isUndefined(param) && !_.isNull(param) && !_.isEqual('', param)) {
+        qp[key] = param;
+      }
+    });
+
+    return mdao.queryList(qp, false, _page, _perPage, _sort, _order)
       .catch(JF.util.http.error.bind(null, res));
   };
 
@@ -132,7 +156,7 @@ BaseManager.prototype.update = function (res, reqData, mname, id) {
     }
   };
 
-  var sucUpdate = function(entity){
+  var sucUpdate = function (entity) {
     JF.util.http.resBack(res, entity);
   };
 

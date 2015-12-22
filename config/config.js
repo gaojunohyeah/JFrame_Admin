@@ -16,6 +16,10 @@ module.exports = {
   serverRoot: rootPath + '/app',
   clientRoot: rootPath + '/public',
 
+  // 上传文件相关
+  uploadPath: rootPath + '/public/files/cache',
+  carImgPath: rootPath + '/public/files/car',
+
   // 数据库相关参数
   DB_dbname: 'jframe_admin',
   DB_username: 'root',
@@ -40,6 +44,8 @@ module.exports = {
   RD_port: 14001,
   RD_data_expire: 5 * 60, // 5分钟
   RD_sessiong_expire: 30 * 60, // 30分钟(session保存时间)
+  RD_file_key: 'jframe_file_cache_key', // (临时文件缓存key)
+  RD_file_expire: 60 * 60, // 60分钟(临时文件缓存保存时间)
 
   // app key
   APP_KEY: '5D31521F4BC986B0192A0ACFA3E1D354',

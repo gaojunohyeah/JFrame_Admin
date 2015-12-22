@@ -6,16 +6,19 @@
 
 var GM_User = nga.entity('GM_User');
 
-GM_User.listView().fields([
-  nga.field('id'),
-  nga.field('username'),
-  nga.field('nickname'),
-  nga.field('role', 'reference')
-    .label('Role')
-    .targetEntity(admin.getEntity('GM_Role'))
-    .targetField(nga.field('name')),
-  nga.field('state')
-]);
+GM_User.listView()
+  .perPage(config.default_perpage)
+  .sortDir(config.default_order)
+  .fields([
+    nga.field('id'),
+    nga.field('username'),
+    nga.field('nickname'),
+    nga.field('role', 'reference')
+      .label('Role')
+      .targetEntity(admin.getEntity('GM_Role'))
+      .targetField(nga.field('name')),
+    nga.field('state')
+  ]);
 
 // add
 GM_User.creationView().fields([
