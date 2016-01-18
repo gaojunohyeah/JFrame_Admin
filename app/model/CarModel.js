@@ -22,13 +22,13 @@ function db_init(sequelize) {
         autoIncrement: true,
       },
     
-      brandId: {
+      brandSeriesId: {
         type: Sequelize.BIGINT(20),
         allowNull: false,
         unique: false,
-        field: "brandId",
+        field: "brandSeriesId",
         defaultValue: 0,
-        comment: "品牌id",
+        comment: "品牌系列id",
         
       },
     
@@ -52,13 +52,23 @@ function db_init(sequelize) {
         
       },
     
-      engine: {
-        type: Sequelize.STRING(30),
+      engineId: {
+        type: Sequelize.BIGINT(20),
         allowNull: true,
         unique: false,
-        field: "engine",
-        defaultValue: "",
-        comment: "发动机",
+        field: "engineId",
+        defaultValue: 0,
+        comment: "发动机ID",
+        
+      },
+    
+      transmission: {
+        type: Sequelize.INTEGER(2),
+        allowNull: true,
+        unique: false,
+        field: "transmission",
+        defaultValue: 0,
+        comment: "变速箱(0自动 1手动)",
         
       },
     
@@ -68,7 +78,7 @@ function db_init(sequelize) {
     indexes: [
       {
         unique: false,
-        fields: ['brandId','carType',]
+        fields: ['brandSeriesId','carType',]
       },
       {
         unique: false,

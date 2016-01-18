@@ -25,7 +25,12 @@ City.listView()
       .label('城市名'),
     nga.field('area', 'choice')
       .label('地域')
-      .choices(areaChoice)
+      .choices(areaChoice),
+    nga.field('hot', 'choice')
+      .label('热门')
+      .choices([
+        {label: '否', value: 0},
+        {label: '是', value: 1}])
   ])
   .listActions(['edit', 'delete'])
   .filters([
@@ -45,6 +50,12 @@ City.creationView()
     nga.field('area', 'choice')
       .label('地域')
       .choices(areaChoice)
+      .validation({required: true}),
+    nga.field('hot', 'choice')
+      .label('热门')
+      .choices([
+        {label: '否', value: 0},
+        {label: '是', value: 1}])
       .validation({required: true})
   ]);
 
@@ -58,6 +69,12 @@ City.editionView()
     nga.field('area', 'choice')
       .label('地域')
       .choices(areaChoice)
+      .validation({required: true}),
+    nga.field('hot', 'choice')
+      .label('热门')
+      .choices([
+        {label: '否', value: 0},
+        {label: '是', value: 1}])
       .validation({required: true})
   ]);
 

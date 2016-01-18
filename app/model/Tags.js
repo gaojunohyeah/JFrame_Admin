@@ -1,5 +1,5 @@
 /**
- * City.js
+ * Tags.js
  * Created by auto tool.
  */
 
@@ -9,7 +9,7 @@ var Sequelize = require('sequelize');
 
 function db_init(sequelize) {
   // 用户信息表
-  var City = sequelize.define('city', {
+  var Tags = sequelize.define('tags', {
     
       id: {
         type: Sequelize.BIGINT(20),
@@ -28,27 +28,7 @@ function db_init(sequelize) {
         unique: false,
         field: "name",
         defaultValue: "",
-        comment: "城市名称",
-        
-      },
-    
-      area: {
-        type: Sequelize.INTEGER(5),
-        allowNull: true,
-        unique: false,
-        field: "area",
-        defaultValue: 0,
-        comment: "区域",
-        
-      },
-    
-      hot: {
-        type: Sequelize.INTEGER(5),
-        allowNull: true,
-        unique: false,
-        field: "hot",
-        defaultValue: 0,
-        comment: "是否热门(0否，1是)",
+        comment: "推荐标签",
         
       },
     
@@ -56,19 +36,15 @@ function db_init(sequelize) {
     freezeTableName: true,
     timestamps: true,
     indexes: [
-      {
-        unique: false,
-        fields: ['area',]
-      },
       
     ],
   });
 
-  City.sync();
+  Tags.sync();
 
-  return City;
+  return Tags;
 }
 
-exports.City = function (sequelize) {
+exports.Tags = function (sequelize) {
   return db_init(sequelize);
 };

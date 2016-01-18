@@ -1,5 +1,5 @@
 /**
- * City.js
+ * BrandSeries.js
  * Created by auto tool.
  */
 
@@ -9,7 +9,7 @@ var Sequelize = require('sequelize');
 
 function db_init(sequelize) {
   // 用户信息表
-  var City = sequelize.define('city', {
+  var BrandSeries = sequelize.define('brandseries', {
     
       id: {
         type: Sequelize.BIGINT(20),
@@ -22,33 +22,23 @@ function db_init(sequelize) {
         autoIncrement: true,
       },
     
-      name: {
+      brandId: {
         type: Sequelize.STRING(20),
         allowNull: false,
         unique: false,
+        field: "brandId",
+        defaultValue: "",
+        comment: "品牌系列",
+        
+      },
+    
+      name: {
+        type: Sequelize.STRING(30),
+        allowNull: true,
+        unique: false,
         field: "name",
         defaultValue: "",
-        comment: "城市名称",
-        
-      },
-    
-      area: {
-        type: Sequelize.INTEGER(5),
-        allowNull: true,
-        unique: false,
-        field: "area",
-        defaultValue: 0,
-        comment: "区域",
-        
-      },
-    
-      hot: {
-        type: Sequelize.INTEGER(5),
-        allowNull: true,
-        unique: false,
-        field: "hot",
-        defaultValue: 0,
-        comment: "是否热门(0否，1是)",
+        comment: "系列名称",
         
       },
     
@@ -58,17 +48,21 @@ function db_init(sequelize) {
     indexes: [
       {
         unique: false,
-        fields: ['area',]
+        fields: ['brandId',]
+      },
+      {
+        unique: false,
+        fields: ['name',]
       },
       
     ],
   });
 
-  City.sync();
+  BrandSeries.sync();
 
-  return City;
+  return BrandSeries;
 }
 
-exports.City = function (sequelize) {
+exports.BrandSeries = function (sequelize) {
   return db_init(sequelize);
 };

@@ -9,7 +9,7 @@ var rootPath = path.normalize(__dirname + '/..');
 
 module.exports = {
   environment: 'development',
-  host: 'http://192.168.111.119:3333',
+  host: 'http://192.168.111.103:3333',
 
   // 项目基础路径定义
   root: rootPath,
@@ -68,5 +68,5 @@ module.exports = {
   mail_sender: 'JFrame <rajay2015@163.com>',
 
   gm_self_module: ['menu', 'role', 'user'],
-  gm_game_host: 'http://192.168.111.119:3000/',
+  gm_game_host: 'http://192.168.111.103:3000/',
 };

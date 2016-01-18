@@ -45,8 +45,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
-	__webpack_require__(9);
-	module.exports = __webpack_require__(13);
+	__webpack_require__(36);
+	module.exports = __webpack_require__(40);
 
 
 /***/ },
@@ -63,44 +63,219 @@
 	 * 基础配置
 	 * @type {*|exports|module.exports}
 	 */
-	global.config = __webpack_require__(19);
-	global.enums = __webpack_require__(23);
+	global.config = __webpack_require__(2);
+	global.enums = __webpack_require__(3);
 
 	var dep_vars = ['ng-admin', 'ngCookies', 'http-auth-interceptor', 'LocalStorageModule'];
 
 	var app = angular.module('jframe', dep_vars);
 
 	// custom API flavor
-	var apiFlavor = __webpack_require__(2);
+	var apiFlavor = __webpack_require__(7);
 	app.config(['RestangularProvider', apiFlavor.requestInterceptor]);
 	app.config(['RestangularProvider', apiFlavor.responseInterceptor]);
 
 	/**
 	 * 路由模块
 	 */
-	app.config(['$urlRouterProvider', '$stateProvider', __webpack_require__(3)]);
+	app.config(['$urlRouterProvider', '$stateProvider', __webpack_require__(8)]);
 
 	/**
 	 * 运行监听
 	 */
-	__webpack_require__(4)(app);
+	__webpack_require__(9)(app);
 
 	/**
 	 * controllers,services,directives,filters
 	 */
-	__webpack_require__(6)(app);
+	__webpack_require__(11)(app);
 	__webpack_require__(14)(app);
-	__webpack_require__(17)(app);
 	__webpack_require__(18)(app);
+	__webpack_require__(19)(app);
 
 	/**
 	 * 基础实体配置
 	 */
-	app.config(['NgAdminConfigurationProvider', __webpack_require__(21)]);
+	app.config(['NgAdminConfigurationProvider', __webpack_require__(20)]);
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 2 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by gaojun on 15/12/11.
+	 */
+
+	'use strict';
+
+	module.exports = {
+	  // name
+	  name: "JFrame",
+
+	  /**
+	   * 服务器ip
+	   */
+	  local_url: "http://localhost:3333/",
+
+	  // deafult cookie name
+	  cookie_user_name: "JFRAME_USER_COOKIE",
+
+	  /*
+	   * default cookie expire time
+	   * default value : 30 minutes
+	   */
+	  cookie_expiration_time: 30 * 60 * 1000,
+
+	  /*
+	   * 默认每页数据条数，20
+	   */
+	  default_perpage: 20,
+	  /**
+	   * 默认排序方式,ASC升序
+	   */
+	  default_order: "ASC", // DESC
+
+	  default_file_upload: {
+	    'url': '/file/upload',
+	    'apifilename': 'file_name'
+	  }
+	};
+
+/***/ },
+/* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Created by gaojun on 15/12/12.
+	 */
+
+	'use strict';
+
+	module.exports = {
+	  base: __webpack_require__(4),
+	  ret: __webpack_require__(5),
+	  area: __webpack_require__(6)
+	};
+
+/***/ },
+/* 4 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by gaojun on 15/11/3.
+	 */
+
+	'use strict';
+
+	var letter = {
+	  A: 1,
+	  B: 2,
+	  C: 3,
+	  D: 4,
+	  E: 5,
+	  F: 6,
+	  G: 7,
+	  H: 8,
+	  I: 9,
+	  J: 10,
+	  K: 11,
+	  L: 12,
+	  M: 13,
+	  N: 14,
+	  O: 15,
+	  P: 16,
+	  Q: 17,
+	  R: 18,
+	  S: 19,
+	  T: 20,
+	  U: 21,
+	  V: 22,
+	  W: 23,
+	  X: 24,
+	  Y: 25,
+	  Z: 26
+	};
+
+	// 排放标准
+	var emission = ['国五', '国四及以上', '国三及以上', '国二及以上'];
+
+	module.exports = {
+	  letter: letter,
+	  emission: emission
+	};
+
+/***/ },
+/* 5 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by gaojun on 15/11/3.
+	 */
+
+	'use strict';
+
+	module.exports = {
+	  /*
+	   * 返回标识
+	   * 基础 		-1 -> -100
+	   * 用户 		-101 -> -200
+	   */
+
+	  // 基础 		-1 -> -100
+	  SUCCESS: 0, // 成功
+	  ERROR: -1, // 错误
+	  PARAM_ERROR: -2, // 参数有误
+	  INNER_ERROR: -99, // 内部异常
+
+	  // 用户 		-101 -> -200
+	  USER_PW_UNEQUAL: -101, // 两次密码不一致
+	  USER_EMAIL_REG: -102, // 邮箱规则错误
+	  USER_EMAIL_EXIST: -103, // 邮箱已存在
+	  USER_EMAIL_SRV: -104, // 邮件服务器错误
+	  USER_NO_EXIST: -105, // 用户不存在
+	  USER_TOKEN_ERROR: -106 };
+	// token失效
+
+/***/ },
+/* 6 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by gaojun on 15/11/3.
+	 */
+
+	'use strict';
+
+	module.exports = {
+	  HUABEI: {
+	    value: 1,
+	    name: '华北'
+	  },
+	  DONGBEI: {
+	    value: 2,
+	    name: '东北'
+	  },
+	  HUADONG: {
+	    value: 3,
+	    name: '华东'
+	  },
+	  HUAZHONG: {
+	    value: 4,
+	    name: '华中'
+	  },
+	  HUANAN: {
+	    value: 5,
+	    name: '华南'
+	  },
+	  XIBU: {
+	    value: 6,
+	    name: '西部'
+	  }
+	};
+
+/***/ },
+/* 7 */
 /***/ function(module, exports) {
 
 	/**
@@ -142,7 +317,7 @@
 	var responseInterceptor = function responseInterceptor(RestangularProvider) {
 	  RestangularProvider.addResponseInterceptor(function (data, operation, what, url, response) {
 	    if (operation == "getList") {
-	      response.totalCount = response.headers('Content-Range');
+	      response.totalCount = response.headers('Total_Count');
 	      //response.totalCount = contentRange;
 	    } else if (operation == "remove") {}
 	    return data;
@@ -155,7 +330,7 @@
 	};
 
 /***/ },
-/* 3 */
+/* 8 */
 /***/ function(module, exports) {
 
 	/**
@@ -183,7 +358,7 @@
 	module.exports = route;
 
 /***/ },
-/* 4 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -193,11 +368,11 @@
 	'use strict';
 
 	module.exports = function (app) {
-	  app.run(['$rootScope', '$location', __webpack_require__(5)]);
+	  app.run(['$rootScope', '$location', __webpack_require__(10)]);
 	};
 
 /***/ },
-/* 5 */
+/* 10 */
 /***/ function(module, exports) {
 
 	/**
@@ -226,7 +401,7 @@
 	module.exports = fn;
 
 /***/ },
-/* 6 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -236,13 +411,13 @@
 	'use strict';
 
 	module.exports = function (app) {
-	  app.controller('appCtrl', __webpack_require__(7));
+	  app.controller('appCtrl', __webpack_require__(12));
 
-	  app.controller('loginCtrl', __webpack_require__(8));
+	  app.controller('loginCtrl', __webpack_require__(13));
 	};
 
 /***/ },
-/* 7 */
+/* 12 */
 /***/ function(module, exports) {
 
 	/**
@@ -330,7 +505,7 @@
 	module.exports = appCtrl;
 
 /***/ },
-/* 8 */
+/* 13 */
 /***/ function(module, exports) {
 
 	/**
@@ -360,346 +535,6 @@
 	module.exports = loginCtrl;
 
 /***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Created by gaojun on 15/12/11.
-	 */
-
-	'use strict';
-
-	__webpack_require__(10);
-	__webpack_require__(11);
-	__webpack_require__(12);
-
-/***/ },
-/* 10 */
-/***/ function(module, exports) {
-
-	/*
-	 AngularJS v1.4.8
-	 (c) 2010-2015 Google, Inc. http://angularjs.org
-	 License: MIT
-	*/
-	"use strict";
-
-	(function (p, c, n) {
-	  'use strict';function l(b, a, g) {
-	    var d = g.baseHref(),
-	        k = b[0];return function (b, e, f) {
-	      var g, h;f = f || {};h = f.expires;g = c.isDefined(f.path) ? f.path : d;c.isUndefined(e) && (h = "Thu, 01 Jan 1970 00:00:00 GMT", e = "");c.isString(h) && (h = new Date(h));e = encodeURIComponent(b) + "=" + encodeURIComponent(e);e = e + (g ? ";path=" + g : "") + (f.domain ? ";domain=" + f.domain : "");e += h ? ";expires=" + h.toUTCString() : "";e += f.secure ? ";secure" : "";f = e.length + 1;4096 < f && a.warn("Cookie '" + b + "' possibly not set or overflowed because it was too large (" + f + " > 4096 bytes)!");k.cookie = e;
-	    };
-	  }c.module("ngCookies", ["ng"]).provider("$cookies", [function () {
-	    var b = this.defaults = {};this.$get = ["$$cookieReader", "$$cookieWriter", function (a, g) {
-	      return { get: function get(d) {
-	          return a()[d];
-	        }, getObject: function getObject(d) {
-	          return (d = this.get(d)) ? c.fromJson(d) : d;
-	        }, getAll: function getAll() {
-	          return a();
-	        }, put: function put(d, a, m) {
-	          g(d, a, m ? c.extend({}, b, m) : b);
-	        }, putObject: function putObject(d, b, a) {
-	          this.put(d, c.toJson(b), a);
-	        }, remove: function remove(a, k) {
-	          g(a, n, k ? c.extend({}, b, k) : b);
-	        } };
-	    }];
-	  }]);c.module("ngCookies").factory("$cookieStore", ["$cookies", function (b) {
-	    return { get: function get(a) {
-	        return b.getObject(a);
-	      }, put: function put(a, c) {
-	        b.putObject(a, c);
-	      }, remove: function remove(a) {
-	        b.remove(a);
-	      } };
-	  }]);l.$inject = ["$document", "$log", "$browser"];c.module("ngCookies").provider("$$cookieWriter", function () {
-	    this.$get = l;
-	  });
-	})(window, window.angular);
-	//# sourceMappingURL=angular-cookies.min.js.map
-
-/***/ },
-/* 11 */
-/***/ function(module, exports) {
-
-	/*global angular:true, browser:true */
-
-	/**
-	 * @license HTTP Auth Interceptor Module for AngularJS
-	 * (c) 2012 Witold Szczerba
-	 * License: MIT
-	 */
-	'use strict';
-
-	(function () {
-	  'use strict';
-
-	  angular.module('http-auth-interceptor', ['http-auth-interceptor-buffer']).factory('authService', ['$rootScope', 'httpBuffer', function ($rootScope, httpBuffer) {
-	    return {
-	      /**
-	       * Call this function to indicate that authentication was successfull and trigger a
-	       * retry of all deferred requests.
-	       * @param data an optional argument to pass on to $broadcast which may be useful for
-	       * example if you need to pass through details of the user that was logged in
-	       * @param configUpdater an optional transformation function that can modify the
-	       * requests that are retried after having logged in.  This can be used for example
-	       * to add an authentication token.  It must return the request.
-	       */
-	      loginConfirmed: function loginConfirmed(data, configUpdater) {
-	        var updater = configUpdater || function (config) {
-	          return config;
-	        };
-	        $rootScope.$broadcast('event:auth-loginConfirmed', data);
-	        httpBuffer.retryAll(updater);
-	      },
-
-	      /**
-	       * Call this function to indicate that authentication should not proceed.
-	       * All deferred requests will be abandoned or rejected (if reason is provided).
-	       * @param data an optional argument to pass on to $broadcast.
-	       * @param reason if provided, the requests are rejected; abandoned otherwise.
-	       */
-	      loginCancelled: function loginCancelled(data, reason) {
-	        httpBuffer.rejectAll(reason);
-	        $rootScope.$broadcast('event:auth-loginCancelled', data);
-	      }
-	    };
-	  }])
-
-	  /**
-	   * $http interceptor.
-	   * On 401 response (without 'ignoreAuthModule' option) stores the request
-	   * and broadcasts 'event:auth-loginRequired'.
-	   * On 403 response (without 'ignoreAuthModule' option) discards the request
-	   * and broadcasts 'event:auth-forbidden'.
-	   */
-	  .config(['$httpProvider', function ($httpProvider) {
-	    $httpProvider.interceptors.push(['$rootScope', '$q', 'httpBuffer', function ($rootScope, $q, httpBuffer) {
-	      return {
-	        responseError: function responseError(rejection) {
-	          var config = rejection.config || {};
-	          if (!config.ignoreAuthModule) {
-	            switch (rejection.status) {
-	              case 401:
-	                var deferred = $q.defer();
-	                httpBuffer.append(config, deferred);
-	                $rootScope.$broadcast('event:auth-loginRequired', rejection);
-	                return deferred.promise;
-	              case 403:
-	                $rootScope.$broadcast('event:auth-forbidden', rejection);
-	                break;
-	            }
-	          }
-	          // otherwise, default behaviour
-	          return $q.reject(rejection);
-	        }
-	      };
-	    }]);
-	  }]);
-
-	  /**
-	   * Private module, a utility, required internally by 'http-auth-interceptor'.
-	   */
-	  angular.module('http-auth-interceptor-buffer', []).factory('httpBuffer', ['$injector', function ($injector) {
-	    /** Holds all the requests, so they can be re-requested in future. */
-	    var buffer = [];
-
-	    /** Service initialized later because of circular dependency problem. */
-	    var $http;
-
-	    function retryHttpRequest(config, deferred) {
-	      function successCallback(response) {
-	        deferred.resolve(response);
-	      }
-	      function errorCallback(response) {
-	        deferred.reject(response);
-	      }
-	      $http = $http || $injector.get('$http');
-	      $http(config).then(successCallback, errorCallback);
-	    }
-
-	    return {
-	      /**
-	       * Appends HTTP request configuration object with deferred response attached to buffer.
-	       */
-	      append: function append(config, deferred) {
-	        buffer.push({
-	          config: config,
-	          deferred: deferred
-	        });
-	      },
-
-	      /**
-	       * Abandon or reject (if reason provided) all the buffered requests.
-	       */
-	      rejectAll: function rejectAll(reason) {
-	        if (reason) {
-	          for (var i = 0; i < buffer.length; ++i) {
-	            buffer[i].deferred.reject(reason);
-	          }
-	        }
-	        buffer = [];
-	      },
-
-	      /**
-	       * Retries all the buffered requests clears the buffer.
-	       */
-	      retryAll: function retryAll(updater) {
-	        for (var i = 0; i < buffer.length; ++i) {
-	          retryHttpRequest(updater(buffer[i].config), buffer[i].deferred);
-	        }
-	        buffer = [];
-	      }
-	    };
-	  }]);
-	})();
-
-/***/ },
-/* 12 */
-/***/ function(module, exports) {
-
-	/**
-	 * An Angular module that gives you access to the browsers local storage
-	 * @version v0.2.3 - 2015-10-11
-	 * @link https://github.com/grevory/angular-local-storage
-	 * @author grevory <greg@gregpike.ca>
-	 * @license MIT License, http://www.opensource.org/licenses/MIT
-	 */"use strict";
-
-	!(function (a, b) {
-	  "use strict";var c = b.isDefined,
-	      d = b.isUndefined,
-	      e = b.isNumber,
-	      f = b.isObject,
-	      g = b.isArray,
-	      h = b.extend,
-	      i = b.toJson,
-	      j = b.module("LocalStorageModule", []);j.provider("localStorageService", function () {
-	    this.prefix = "ls", this.storageType = "localStorage", this.cookie = { expiry: 30, path: "/" }, this.notify = { setItem: !0, removeItem: !1 }, this.setPrefix = function (a) {
-	      return this.prefix = a, this;
-	    }, this.setStorageType = function (a) {
-	      return this.storageType = a, this;
-	    }, this.setStorageCookie = function (a, b) {
-	      return this.cookie.expiry = a, this.cookie.path = b, this;
-	    }, this.setStorageCookieDomain = function (a) {
-	      return this.cookie.domain = a, this;
-	    }, this.setNotify = function (a, b) {
-	      return this.notify = { setItem: a, removeItem: b }, this;
-	    }, this.$get = ["$rootScope", "$window", "$document", "$parse", function (a, b, j, k) {
-	      var l,
-	          m = this,
-	          n = m.prefix,
-	          o = m.cookie,
-	          p = m.notify,
-	          q = m.storageType;j ? j[0] && (j = j[0]) : j = document, "." !== n.substr(-1) && (n = n ? n + "." : "");var r = function r(a) {
-	        return n + a;
-	      },
-	          s = (function () {
-	        try {
-	          var c = q in b && null !== b[q],
-	              d = r("__" + Math.round(1e7 * Math.random()));return c && (l = b[q], l.setItem(d, ""), l.removeItem(d)), c;
-	        } catch (e) {
-	          return q = "cookie", a.$broadcast("LocalStorageModule.notification.error", e.message), !1;
-	        }
-	      })(),
-	          t = function t(b, c) {
-	        if ((c = d(c) ? null : i(c), !s || "cookie" === m.storageType)) return s || a.$broadcast("LocalStorageModule.notification.warning", "LOCAL_STORAGE_NOT_SUPPORTED"), p.setItem && a.$broadcast("LocalStorageModule.notification.setitem", { key: b, newvalue: c, storageType: "cookie" }), z(b, c);try {
-	          l && l.setItem(r(b), c), p.setItem && a.$broadcast("LocalStorageModule.notification.setitem", { key: b, newvalue: c, storageType: m.storageType });
-	        } catch (e) {
-	          return a.$broadcast("LocalStorageModule.notification.error", e.message), z(b, c);
-	        }return !0;
-	      },
-	          u = function u(b) {
-	        if (!s || "cookie" === m.storageType) return s || a.$broadcast("LocalStorageModule.notification.warning", "LOCAL_STORAGE_NOT_SUPPORTED"), A(b);var c = l ? l.getItem(r(b)) : null;if (!c || "null" === c) return null;try {
-	          return JSON.parse(c);
-	        } catch (d) {
-	          return c;
-	        }
-	      },
-	          v = function v() {
-	        var b, c;for (b = 0; b < arguments.length; b++) if ((c = arguments[b], s && "cookie" !== m.storageType)) try {
-	          l.removeItem(r(c)), p.removeItem && a.$broadcast("LocalStorageModule.notification.removeitem", { key: c, storageType: m.storageType });
-	        } catch (d) {
-	          a.$broadcast("LocalStorageModule.notification.error", d.message), B(c);
-	        } else s || a.$broadcast("LocalStorageModule.notification.warning", "LOCAL_STORAGE_NOT_SUPPORTED"), p.removeItem && a.$broadcast("LocalStorageModule.notification.removeitem", { key: c, storageType: "cookie" }), B(c);
-	      },
-	          w = function w() {
-	        if (!s) return a.$broadcast("LocalStorageModule.notification.warning", "LOCAL_STORAGE_NOT_SUPPORTED"), !1;var b = n.length,
-	            c = [];for (var d in l) if (d.substr(0, b) === n) try {
-	          c.push(d.substr(b));
-	        } catch (e) {
-	          return a.$broadcast("LocalStorageModule.notification.error", e.Description), [];
-	        }return c;
-	      },
-	          x = function x(b) {
-	        var c = n ? new RegExp("^" + n) : new RegExp(),
-	            d = b ? new RegExp(b) : new RegExp();if (!s || "cookie" === m.storageType) return s || a.$broadcast("LocalStorageModule.notification.warning", "LOCAL_STORAGE_NOT_SUPPORTED"), C();var e = n.length;for (var f in l) if (c.test(f) && d.test(f.substr(e))) try {
-	          v(f.substr(e));
-	        } catch (g) {
-	          return a.$broadcast("LocalStorageModule.notification.error", g.message), C();
-	        }return !0;
-	      },
-	          y = (function () {
-	        try {
-	          return b.navigator.cookieEnabled || "cookie" in j && (j.cookie.length > 0 || (j.cookie = "test").indexOf.call(j.cookie, "test") > -1);
-	        } catch (c) {
-	          return a.$broadcast("LocalStorageModule.notification.error", c.message), !1;
-	        }
-	      })(),
-	          z = function z(b, c, h) {
-	        if (d(c)) return !1;if (((g(c) || f(c)) && (c = i(c)), !y)) return a.$broadcast("LocalStorageModule.notification.error", "COOKIES_NOT_SUPPORTED"), !1;try {
-	          var k = "",
-	              l = new Date(),
-	              m = "";if ((null === c ? (l.setTime(l.getTime() + -864e5), k = "; expires=" + l.toGMTString(), c = "") : e(h) && 0 !== h ? (l.setTime(l.getTime() + 24 * h * 60 * 60 * 1e3), k = "; expires=" + l.toGMTString()) : 0 !== o.expiry && (l.setTime(l.getTime() + 24 * o.expiry * 60 * 60 * 1e3), k = "; expires=" + l.toGMTString()), b)) {
-	            var n = "; path=" + o.path;o.domain && (m = "; domain=" + o.domain), j.cookie = r(b) + "=" + encodeURIComponent(c) + k + n + m;
-	          }
-	        } catch (p) {
-	          return a.$broadcast("LocalStorageModule.notification.error", p.message), !1;
-	        }return !0;
-	      },
-	          A = function A(b) {
-	        if (!y) return a.$broadcast("LocalStorageModule.notification.error", "COOKIES_NOT_SUPPORTED"), !1;for (var c = j.cookie && j.cookie.split(";") || [], d = 0; d < c.length; d++) {
-	          for (var e = c[d]; " " === e.charAt(0);) e = e.substring(1, e.length);if (0 === e.indexOf(r(b) + "=")) {
-	            var f = decodeURIComponent(e.substring(n.length + b.length + 1, e.length));try {
-	              return JSON.parse(f);
-	            } catch (g) {
-	              return f;
-	            }
-	          }
-	        }return null;
-	      },
-	          B = function B(a) {
-	        z(a, null);
-	      },
-	          C = function C() {
-	        for (var a = null, b = n.length, c = j.cookie.split(";"), d = 0; d < c.length; d++) {
-	          for (a = c[d]; " " === a.charAt(0);) a = a.substring(1, a.length);var e = a.substring(b, a.indexOf("="));B(e);
-	        }
-	      },
-	          D = function D() {
-	        return q;
-	      },
-	          E = function E(a, b, d, e) {
-	        e = e || b;var g = u(e);return null === g && c(d) ? g = d : f(g) && f(d) && (g = h(d, g)), k(b).assign(a, g), a.$watch(b, function (a) {
-	          t(e, a);
-	        }, f(a[b]));
-	      },
-	          F = function F() {
-	        for (var a = 0, c = b[q], d = 0; d < c.length; d++) 0 === c.key(d).indexOf(n) && a++;return a;
-	      };return { isSupported: s, getStorageType: D, set: t, add: t, get: u, keys: w, remove: v, clearAll: x, bind: E, deriveKey: r, length: F, cookie: { isSupported: y, set: z, add: z, get: A, remove: B, clearAll: C } };
-	    }];
-	  });
-	})(window, window.angular);
-
-/***/ },
-/* 13 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
-
-/***/ },
 /* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -714,7 +549,7 @@
 
 	  app.factory('reqSrv', __webpack_require__(16));
 
-	  app.factory('menuSrv', __webpack_require__(31));
+	  app.factory('menuSrv', __webpack_require__(17));
 	};
 
 /***/ },
@@ -877,192 +712,6 @@
 
 	'use strict';
 
-	module.exports = function (app) {};
-
-/***/ },
-/* 18 */
-/***/ function(module, exports) {
-
-	/**
-	 * Created by gaojun on 15/12/11.
-	 */
-
-	'use strict';
-
-	module.exports = function (app) {};
-
-/***/ },
-/* 19 */
-/***/ function(module, exports) {
-
-	/**
-	 * Created by gaojun on 15/12/11.
-	 */
-
-	'use strict';
-
-	module.exports = {
-	  // name
-	  name: "JFrame",
-
-	  /**
-	   * 服务器ip
-	   */
-	  local_url: "http://localhost:3333/",
-
-	  // deafult cookie name
-	  cookie_user_name: "JFRAME_USER_COOKIE",
-
-	  /*
-	   * default cookie expire time
-	   * default value : 30 minutes
-	   */
-	  cookie_expiration_time: 30 * 60 * 1000,
-
-	  /*
-	   * 默认每页数据条数，20
-	   */
-	  default_perpage: 20,
-	  /**
-	   * 默认排序方式,ASC升序
-	   */
-	  default_order: "ASC", // DESC
-
-	  default_file_upload: {
-	    'url': '/file/upload',
-	    'apifilename': 'file_name'
-	  }
-	};
-
-/***/ },
-/* 20 */,
-/* 21 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {/**
-	 * Created by gaojun on 15/12/11.
-	 */
-
-	'use strict';
-
-	module.exports = function (nga) {
-	  // create an admin application
-	  var admin = nga.application(config.name).baseApiUrl('/data/'); // main API endpoint
-
-	  // 将 admin 和 nga对象设为全局
-	  global.admin = admin;
-	  global.nga = nga;
-
-	  // add entities (有先后加载关系，依赖方需要在被依赖方后加载，否则会出错)
-	  admin.addEntity(__webpack_require__(36));
-	  admin.addEntity(__webpack_require__(39));
-	  admin.addEntity(__webpack_require__(38));
-	  admin.addEntity(__webpack_require__(37));
-	  admin.addEntity(__webpack_require__(35));
-	  admin.addEntity(__webpack_require__(42));
-
-	  admin.addEntity(__webpack_require__(33));
-	  admin.addEntity(__webpack_require__(32));
-	  admin.addEntity(__webpack_require__(34));
-
-	  // 页头
-	  admin.header(__webpack_require__(25));
-	  // 首页
-	  admin.dashboard(__webpack_require__(26)());
-	  // 菜单在登录之后动态生成
-
-	  nga.configure(admin);
-	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 22 */,
-/* 23 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Created by gaojun on 15/12/12.
-	 */
-
-	'use strict';
-
-	module.exports = {
-	  base: __webpack_require__(41),
-	  ret: __webpack_require__(24),
-	  area: __webpack_require__(40)
-	};
-
-/***/ },
-/* 24 */
-/***/ function(module, exports) {
-
-	/**
-	 * Created by gaojun on 15/11/3.
-	 */
-
-	'use strict';
-
-	module.exports = {
-	  /*
-	   * 返回标识
-	   * 基础 		-1 -> -100
-	   * 用户 		-101 -> -200
-	   */
-
-	  // 基础 		-1 -> -100
-	  SUCCESS: 0, // 成功
-	  ERROR: -1, // 错误
-	  PARAM_ERROR: -2, // 参数有误
-	  INNER_ERROR: -99, // 内部异常
-
-	  // 用户 		-101 -> -200
-	  USER_PW_UNEQUAL: -101, // 两次密码不一致
-	  USER_EMAIL_REG: -102, // 邮箱规则错误
-	  USER_EMAIL_EXIST: -103, // 邮箱已存在
-	  USER_EMAIL_SRV: -104, // 邮件服务器错误
-	  USER_NO_EXIST: -105, // 用户不存在
-	  USER_TOKEN_ERROR: -106 };
-	// token失效
-
-/***/ },
-/* 25 */
-/***/ function(module, exports) {
-
-	module.exports = "<div class=\"navbar-header\">\n  <button type=\"button\" class=\"navbar-toggle\" ng-click=\"isCollapsed = !isCollapsed\">\n    <span class=\"icon-bar\"></span>\n    <span class=\"icon-bar\"></span>\n    <span class=\"icon-bar\"></span>\n  </button>\n  <a class=\"navbar-brand\" href=\"#\" ng-click=\"appController.displayHome()\">JFrame Admin</a>\n</div>\n<ul class=\"nav navbar-top-links navbar-right hidden-xs\">\n  <!--<li>-->\n    <!--<a href=\"https://github.com/marmelab/ng-admin-demo\">-->\n      <!--<i class=\"fa fa-github fa-lg\"></i>&nbsp;Source-->\n    <!--</a>-->\n  <!--</li>-->\n  <li dropdown>\n    <a dropdown-toggle href=\"#\" aria-expanded=\"true\">\n      <i class=\"fa fa-user fa-lg\"></i>&nbsp;{{ user.nickname }}&nbsp;<i class=\"fa fa-caret-down\"></i>\n    </a>\n    <ul class=\"dropdown-menu dropdown-user\" role=\"menu\">\n      <li><a href=\"#\" ng-click=\"logout()\"><i class=\"fa fa-sign-out fa-fw\"></i> Logout</a></li>\n    </ul>\n  </li>\n</ul>\n";
-
-/***/ },
-/* 26 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Created by gaojun on 15/12/12.
-	 */
-
-	'use strict';
-
-	module.exports = function () {
-	  return nga.dashboard().template(__webpack_require__(27));
-	};
-
-/***/ },
-/* 27 */
-/***/ function(module, exports) {
-
-	module.exports = "<div class=\"row dashboard-content\">\n  <div class=\"col-lg-6\">\n    <div style=\"text-align: center\"><h1>JFrame 后台管理系统</h1></div>\n  </div>\n</div>\n";
-
-/***/ },
-/* 28 */,
-/* 29 */,
-/* 30 */,
-/* 31 */
-/***/ function(module, exports) {
-
-	/**
-	 * Created by gaojun on 15/12/11.
-	 */
-
-	'use strict';
-
 	var menuSrv = function menuSrv($rootScope, authSrv, localStorageService) {
 	  var menus = [];
 
@@ -1197,7 +846,321 @@
 	module.exports = menuSrv;
 
 /***/ },
-/* 32 */
+/* 18 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by gaojun on 15/12/11.
+	 */
+
+	'use strict';
+
+	module.exports = function (app) {};
+
+/***/ },
+/* 19 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by gaojun on 15/12/11.
+	 */
+
+	'use strict';
+
+	module.exports = function (app) {};
+
+/***/ },
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {/**
+	 * Created by gaojun on 15/12/11.
+	 */
+
+	'use strict';
+
+	module.exports = function (nga) {
+	  // create an admin application
+	  var admin = nga.application(config.name).baseApiUrl('/data/'); // main API endpoint
+
+	  // 将 admin 和 nga对象设为全局
+	  global.admin = admin;
+	  global.nga = nga;
+
+	  // add entities (有先后加载关系，依赖方需要在被依赖方后加载，否则会出错)
+	  admin.addEntity(__webpack_require__(21));
+	  admin.addEntity(__webpack_require__(22));
+	  admin.addEntity(__webpack_require__(41));
+	  admin.addEntity(__webpack_require__(23));
+	  admin.addEntity(__webpack_require__(24));
+	  admin.addEntity(__webpack_require__(25));
+	  admin.addEntity(__webpack_require__(26));
+	  admin.addEntity(__webpack_require__(42));
+	  admin.addEntity(__webpack_require__(27));
+	  admin.addEntity(__webpack_require__(28));
+	  admin.addEntity(__webpack_require__(29));
+
+	  admin.addEntity(__webpack_require__(30));
+	  admin.addEntity(__webpack_require__(31));
+	  admin.addEntity(__webpack_require__(32));
+
+	  // 页头
+	  admin.header(__webpack_require__(33));
+	  // 首页
+	  admin.dashboard(__webpack_require__(34)());
+	  // 菜单在登录之后动态生成
+
+	  nga.configure(admin);
+	};
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 21 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by gaojun on 15/12/11.
+	 */
+
+	'use strict';
+
+	var Brand = nga.entity('Brand');
+
+	var letterChoice = [];
+	_.forEach(enums.base.letter, function (value, key) {
+	  var c = {
+	    label: key,
+	    value: value
+	  };
+
+	  letterChoice.push(c);
+	});
+
+	// list
+	Brand.listView().perPage(config.default_perpage).sortDir(config.default_order).fields([nga.field('name').label('品牌名称'), nga.field('letter', 'choice').label('首字母').choices(letterChoice)]).listActions(['edit', 'delete']).filters([nga.field('name').label('品牌名称'), nga.field('letter', 'choice').label('首字母').choices(letterChoice)]);
+
+	// add
+	Brand.creationView().fields([nga.field('name').label('品牌名称').validation({ required: true }), nga.field('letter', 'choice').label('首字母').choices(letterChoice).validation({ required: true })]);
+
+	// edit
+	Brand.editionView().actions(['list', 'delete']).fields([nga.field('name').label('品牌名称').validation({ required: true }), nga.field('letter', 'choice').label('首字母').choices(letterChoice).validation({ required: true })]);
+
+	module.exports = Brand;
+
+/***/ },
+/* 22 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by gaojun on 15/12/26.
+	 */
+
+	'use strict';
+
+	var BrandSeries = nga.entity('BrandSeries');
+
+	// list
+	BrandSeries.listView().perPage(config.default_perpage).sortDir(config.default_order).fields([nga.field('brandId', 'reference').label('品牌').targetEntity(admin.getEntity('Brand')).targetField(nga.field('name')), nga.field('name').label('系列名称')]).listActions(['edit', 'delete']).filters([nga.field('brandId', 'reference').label('品牌').targetEntity(admin.getEntity('Brand')).targetField(nga.field('name')), nga.field('name').label('系列名称')]);
+
+	// add
+	BrandSeries.creationView().fields([nga.field('name').label('系列名称').validation({ required: true }), nga.field('brandId', 'reference').label('品牌').targetEntity(admin.getEntity('Brand')).targetField(nga.field('name')).validation({ required: true })]);
+
+	// edit
+	BrandSeries.editionView().actions(['list', 'delete']).fields([nga.field('name').label('系列名称').validation({ required: true }), nga.field('brandId', 'reference').label('品牌').targetEntity(admin.getEntity('Brand')).targetField(nga.field('name')).validation({ required: true })]);
+
+	module.exports = BrandSeries;
+
+/***/ },
+/* 23 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by gaojun on 15/12/11.
+	 */
+
+	'use strict';
+
+	var Tags = nga.entity('Tags');
+
+	// list
+	Tags.listView().perPage(config.default_perpage).sortDir(config.default_order).fields([nga.field('name').label('标签名')]).listActions(['edit', 'delete']).filters([nga.field('name').label('标签名')]);
+
+	// add
+	Tags.creationView().fields([nga.field('name').label('标签名').validation({ required: true })]);
+
+	// edit
+	Tags.editionView().actions(['list', 'delete']).fields([nga.field('name').label('标签名').validation({ required: true })]);
+
+	module.exports = Tags;
+
+/***/ },
+/* 24 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by gaojun on 15/12/11.
+	 */
+
+	'use strict';
+
+	var City = nga.entity('City');
+
+	var areaChoice = [];
+	_.forEach(enums.area, function (value, key) {
+	  var c = {
+	    label: value.name,
+	    value: value.value
+	  };
+
+	  areaChoice.push(c);
+	});
+
+	// list
+	City.listView().perPage(config.default_perpage).sortDir(config.default_order).fields([nga.field('name').label('城市名'), nga.field('area', 'choice').label('地域').choices(areaChoice), nga.field('hot', 'choice').label('热门').choices([{ label: '否', value: 0 }, { label: '是', value: 1 }])]).listActions(['edit', 'delete']).filters([nga.field('name').label('城市名'), nga.field('area', 'choice').label('地域').choices(areaChoice)]);
+
+	// add
+	City.creationView().fields([nga.field('name').label('城市名').validation({ required: true }), nga.field('area', 'choice').label('地域').choices(areaChoice).validation({ required: true }), nga.field('hot', 'choice').label('热门').choices([{ label: '否', value: 0 }, { label: '是', value: 1 }]).validation({ required: true })]);
+
+	// edit
+	City.editionView().actions(['list', 'delete']).fields([nga.field('name').label('城市名').validation({ required: true }), nga.field('area', 'choice').label('地域').choices(areaChoice).validation({ required: true }), nga.field('hot', 'choice').label('热门').choices([{ label: '否', value: 0 }, { label: '是', value: 1 }]).validation({ required: true })]);
+
+	module.exports = City;
+
+/***/ },
+/* 25 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by gaojun on 15/12/11.
+	 */
+
+	'use strict';
+
+	var CarType = nga.entity('CarType');
+
+	// list
+	CarType.listView().perPage(config.default_perpage).sortDir(config.default_order).fields([nga.field('name').label('车型名称')]).listActions(['edit', 'delete']).filters([nga.field('name').label('车型名称')]);
+
+	// add
+	CarType.creationView().fields([nga.field('name').label('车型名称').validation({ required: true })]);
+
+	// edit
+	CarType.editionView().actions(['list', 'delete']).fields([nga.field('name').label('车型名称').validation({ required: true })]);
+
+	module.exports = CarType;
+
+/***/ },
+/* 26 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by gaojun on 15/12/11.
+	 */
+
+	'use strict';
+
+	var CarModel = nga.entity('CarModel');
+
+	// list
+	CarModel.listView().perPage(config.default_perpage).sortDir(config.default_order).fields([nga.field('brandSeriesId', 'reference').label('品牌系列').targetEntity(admin.getEntity('BrandSeries')).targetField(nga.field('name')), nga.field('name').label('型号名称'), nga.field('carType', 'reference').label('车型').targetEntity(admin.getEntity('CarType')).targetField(nga.field('name')), nga.field('engineId', 'reference').label('发动机').targetEntity(admin.getEntity('CarEngine')).targetField(nga.field('name')), nga.field('transmission', 'choice').label('变速箱').choices([{ label: '自动', value: 0 }, { label: '手动', value: 1 }])]).listActions(['edit', 'delete']).filters([nga.field('brandSeriesId', 'reference').label('品牌系列').targetEntity(admin.getEntity('BrandSeries')).targetField(nga.field('name')), nga.field('name').label('型号名称'), nga.field('carType', 'reference').label('车型').targetEntity(admin.getEntity('CarType')).targetField(nga.field('name'))]);
+
+	// add
+	CarModel.creationView().fields([nga.field('name').label('型号名称').validation({ required: true }), nga.field('brandSeriesId', 'reference').label('品牌系列').targetEntity(admin.getEntity('BrandSeries')).targetField(nga.field('name')).validation({ required: true }), nga.field('carType', 'reference').label('车型').targetEntity(admin.getEntity('CarType')).targetField(nga.field('name')).validation({ required: true }), nga.field('engineId', 'reference').label('发动机').targetEntity(admin.getEntity('CarEngine')).targetField(nga.field('name')).validation({ required: true }), nga.field('transmission', 'choice').label('变速箱').choices([{ label: '自动', value: 0 }, { label: '手动', value: 1 }]).validation({ required: true })]);
+
+	// edit
+	CarModel.editionView().actions(['list', 'delete']).fields([nga.field('name').label('型号名称').validation({ required: true }), nga.field('brandSeriesId', 'reference').label('品牌系列').targetEntity(admin.getEntity('BrandSeries')).targetField(nga.field('name')).validation({ required: true }), nga.field('carType', 'reference').label('车型').targetEntity(admin.getEntity('CarType')).targetField(nga.field('name')).validation({ required: true }), nga.field('engineId', 'reference').label('发动机').targetEntity(admin.getEntity('CarEngine')).targetField(nga.field('name')).validation({ required: true }), nga.field('transmission', 'choice').label('变速箱').choices([{ label: '自动', value: 0 }, { label: '手动', value: 1 }]).validation({ required: true })]);
+
+	module.exports = CarModel;
+
+/***/ },
+/* 27 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by gaojun on 15/12/11.
+	 */
+
+	'use strict';
+
+	var UserInfo = nga.entity('UserInfo');
+
+	// list
+	UserInfo.listView().perPage(config.default_perpage).sortDir(config.default_order).fields([nga.field('username').label('账号'), nga.field('email').label('邮箱'), nga.field('telephone').label('手机号'), nga.field('nickname').label('昵称'), nga.field('img').label('头像'), nga.field('state', 'choice').label('状态').choices([{ label: '禁用', value: 0 }, { label: '正常', value: 1 }])]).listActions(['edit', 'delete']).filters([nga.field('username').label('账号'), nga.field('email', 'email').label('邮箱'), nga.field('telephone').label('手机号'), nga.field('nickname').label('昵称')]);
+
+	// edit
+	UserInfo.editionView().actions(['list', 'delete']).fields([nga.field('username').label('账号'), nga.field('email', 'email').label('邮箱'), nga.field('telephone', 'number').label('手机号'), nga.field('nickname').label('昵称').validation({ required: true, minlength: 1, maxlength: 20 }), nga.field('img').label('头像'), nga.field('state', 'choice').label('状态').choices([{ label: '禁用', value: 0 }, { label: '正常', value: 1 }]).validation({ required: true })]);
+
+	module.exports = UserInfo;
+
+/***/ },
+/* 28 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by gaojun on 15/12/26.
+	 */
+
+	'use strict';
+
+	var CarColor = nga.entity('CarColor');
+
+	// list
+	CarColor.listView().perPage(config.default_perpage).sortDir(config.default_order).fields([nga.field('name').label('颜色名称')]).listActions(['edit', 'delete']).filters([nga.field('name').label('颜色名称')]);
+
+	// add
+	CarColor.creationView().fields([nga.field('name').label('颜色名称').validation({ required: true })]);
+
+	// edit
+	CarColor.editionView().actions(['list', 'delete']).fields([nga.field('name').label('颜色名称').validation({ required: true })]);
+
+	module.exports = CarColor;
+
+/***/ },
+/* 29 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by gaojun on 15/12/11.
+	 */
+
+	'use strict';
+
+	var Car = nga.entity('Car');
+
+	// list
+	Car.listView().fields([nga.field('sellId', 'reference').label('车主').targetEntity(admin.getEntity('UserInfo')).targetField(nga.field('nickname')), nga.field('appraiserId', 'reference').label('评估师').targetEntity(admin.getEntity('Appraiser')).targetField(nga.field('nickname')), nga.field('brandId', 'reference').label('品牌').targetEntity(admin.getEntity('Brand')).targetField(nga.field('name')), nga.field('modelId', 'reference').label('车辆型号').targetEntity(admin.getEntity('CarModel')).targetField(nga.field('name')), nga.field('price', 'float').label('价格(万)'), nga.field('city', 'reference').label('城市').targetEntity(admin.getEntity('City')).targetField(nga.field('name'))]).listActions(['edit', 'delete']).filters([nga.field('sellId').label('车主id'), nga.field('sellUserName').label('车主账号'), nga.field('appraiserName').label('评估师'), nga.field('brandId', 'reference').label('品牌').targetEntity(admin.getEntity('Brand')).targetField(nga.field('name')), nga.field('modelName').label('车辆型号'), nga.field('price', 'float').label('价格'), nga.field('city', 'reference').label('城市').targetEntity(admin.getEntity('City')).targetField(nga.field('name'))]);
+
+	// add
+	Car.creationView().fields([nga.field('sellId', 'reference').label('车主').targetEntity(admin.getEntity('UserInfo')).targetField(nga.field('nickname')).validation({ required: true }), nga.field('sellDesc', 'wysiwyg').label('车主描述').validation({ required: true }), nga.field('appraiserId', 'reference').label('评估师').targetEntity(admin.getEntity('Appraiser')).targetField(nga.field('nickname')).validation({ required: true }), nga.field('appraiserDesc', 'wysiwyg').label('评估师描述').validation({ required: true }), nga.field('brandId', 'reference').label('品牌').targetEntity(admin.getEntity('Brand')).targetField(nga.field('name')).validation({ required: true }), nga.field('modelId', 'reference').label('车辆型号').targetEntity(admin.getEntity('CarModel')).targetField(nga.field('name')).validation({ required: true }), nga.field('price', 'float').label('价格(万)').validation({ required: true }), nga.field('distance', 'float').label('行驶里程(公里)').validation({ required: true }), nga.field('startTime', 'date').label('上牌时间').validation({ required: true }), nga.field('city', 'reference').label('城市').targetEntity(admin.getEntity('City')).targetField(nga.field('name')).validation({ required: true }), nga.field('showImg', 'file').label('展示图片').uploadInformation(config.default_file_upload), nga.field('tag', 'reference_many').label('特殊标签').targetEntity(admin.getEntity('Tags')).targetField(nga.field('name')), nga.field('color', 'reference').label('颜色').targetEntity(admin.getEntity('CarColor')).targetField(nga.field('name')).validation({ required: true })]);
+
+	// edit
+	Car.editionView().actions(['list', 'delete']).fields([nga.field('sellId', 'reference').label('车主').targetEntity(admin.getEntity('UserInfo')).targetField(nga.field('nickname')).validation({ required: true }), nga.field('sellDesc', 'wysiwyg').label('车主描述').validation({ required: true }), nga.field('appraiserId', 'reference').label('评估师').targetEntity(admin.getEntity('Appraiser')).targetField(nga.field('nickname')).validation({ required: true }), nga.field('appraiserDesc', 'wysiwyg').label('评估师描述').validation({ required: true }), nga.field('brandId', 'reference').label('品牌').targetEntity(admin.getEntity('Brand')).targetField(nga.field('name')).validation({ required: true }), nga.field('modelId', 'reference').label('车辆型号').targetEntity(admin.getEntity('CarModel')).targetField(nga.field('name')).validation({ required: true }), nga.field('price', 'float').label('价格(万)').validation({ required: true }), nga.field('distance', 'float').label('行驶里程(公里)').validation({ required: true }), nga.field('startTime', 'date').label('上牌时间').validation({ required: true }), nga.field('city', 'reference').label('城市').targetEntity(admin.getEntity('City')).targetField(nga.field('name')).validation({ required: true }),
+	//nga.field('showImg', 'file')
+	//  .label('展示图片')
+	//  .uploadInformation(config.default_file_upload),
+	nga.field('tag', 'reference_many').label('特殊标签').targetEntity(admin.getEntity('Tags')).targetField(nga.field('name')), nga.field('color', 'reference').label('颜色').targetEntity(admin.getEntity('CarColor')).targetField(nga.field('name')).validation({ required: true })]);
+
+	module.exports = Car;
+
+/***/ },
+/* 30 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by gaojun on 15/12/11.
+	 */
+
+	'use strict';
+
+	var GM_Role = nga.entity('GM_Role');
+
+	// list
+	GM_Role.listView().perPage(config.default_perpage).sortDir(config.default_order).fields([nga.field('id'), nga.field('name'), nga.field('menu')]);
+
+	module.exports = GM_Role;
+
+/***/ },
+/* 31 */
 /***/ function(module, exports) {
 
 	/**
@@ -1231,24 +1194,7 @@
 	module.exports = GM_Menu;
 
 /***/ },
-/* 33 */
-/***/ function(module, exports) {
-
-	/**
-	 * Created by gaojun on 15/12/11.
-	 */
-
-	'use strict';
-
-	var GM_Role = nga.entity('GM_Role');
-
-	// list
-	GM_Role.listView().perPage(config.default_perpage).sortDir(config.default_order).fields([nga.field('id'), nga.field('name'), nga.field('menu')]);
-
-	module.exports = GM_Role;
-
-/***/ },
-/* 34 */
+/* 32 */
 /***/ function(module, exports) {
 
 	/**
@@ -1270,28 +1216,34 @@
 	module.exports = GM_User;
 
 /***/ },
+/* 33 */
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"navbar-header\">\n  <button type=\"button\" class=\"navbar-toggle\" ng-click=\"isCollapsed = !isCollapsed\">\n    <span class=\"icon-bar\"></span>\n    <span class=\"icon-bar\"></span>\n    <span class=\"icon-bar\"></span>\n  </button>\n  <a class=\"navbar-brand\" href=\"#\" ng-click=\"appController.displayHome()\">JFrame Admin</a>\n</div>\n<ul class=\"nav navbar-top-links navbar-right hidden-xs\">\n  <!--<li>-->\n    <!--<a href=\"https://github.com/marmelab/ng-admin-demo\">-->\n      <!--<i class=\"fa fa-github fa-lg\"></i>&nbsp;Source-->\n    <!--</a>-->\n  <!--</li>-->\n  <li dropdown>\n    <a dropdown-toggle href=\"#\" aria-expanded=\"true\">\n      <i class=\"fa fa-user fa-lg\"></i>&nbsp;{{ user.nickname }}&nbsp;<i class=\"fa fa-caret-down\"></i>\n    </a>\n    <ul class=\"dropdown-menu dropdown-user\" role=\"menu\">\n      <li><a href=\"#\" ng-click=\"logout()\"><i class=\"fa fa-sign-out fa-fw\"></i> Logout</a></li>\n    </ul>\n  </li>\n</ul>\n";
+
+/***/ },
+/* 34 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Created by gaojun on 15/12/12.
+	 */
+
+	'use strict';
+
+	module.exports = function () {
+	  return nga.dashboard().template(__webpack_require__(35));
+	};
+
+/***/ },
 /* 35 */
 /***/ function(module, exports) {
 
-	/**
-	 * Created by gaojun on 15/12/11.
-	 */
-
-	'use strict';
-
-	var UserInfo = nga.entity('UserInfo');
-
-	// list
-	UserInfo.listView().perPage(config.default_perpage).sortDir(config.default_order).fields([nga.field('username').label('账号'), nga.field('email').label('邮箱'), nga.field('telephone').label('手机号'), nga.field('nickname').label('昵称'), nga.field('img').label('头像'), nga.field('state', 'choice').label('状态').choices([{ label: '禁用', value: 0 }, { label: '正常', value: 1 }])]).listActions(['edit', 'delete']).filters([nga.field('username').label('账号'), nga.field('email', 'email').label('邮箱'), nga.field('telephone').label('手机号'), nga.field('nickname').label('昵称')]);
-
-	// edit
-	UserInfo.editionView().actions(['list', 'delete']).fields([nga.field('username').label('账号'), nga.field('email', 'email').label('邮箱'), nga.field('telephone', 'number').label('手机号'), nga.field('nickname').label('昵称').validation({ required: true, minlength: 1, maxlength: 20 }), nga.field('img').label('头像'), nga.field('state', 'choice').label('状态').choices([{ label: '禁用', value: 0 }, { label: '正常', value: 1 }]).validation({ required: true })]);
-
-	module.exports = UserInfo;
+	module.exports = "<div class=\"row dashboard-content\">\n  <div class=\"col-lg-6\">\n    <div style=\"text-align: center\"><h1>JFrame 后台管理系统</h1></div>\n  </div>\n</div>\n";
 
 /***/ },
 /* 36 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Created by gaojun on 15/12/11.
@@ -1299,86 +1251,380 @@
 
 	'use strict';
 
-	var Brand = nga.entity('Brand');
-
-	var letterChoice = [];
-	_.forEach(enums.base.letter, function (value, key) {
-	  var c = {
-	    label: key,
-	    value: value
-	  };
-
-	  letterChoice.push(c);
-	});
-
-	// list
-	Brand.listView().perPage(config.default_perpage).sortDir(config.default_order).fields([nga.field('name').label('品牌名称'), nga.field('letter', 'choice').label('首字母').choices(letterChoice)]).listActions(['edit', 'delete']).filters([nga.field('name').label('品牌名称'), nga.field('letter', 'choice').label('首字母').choices(letterChoice)]);
-
-	// add
-	Brand.creationView().fields([nga.field('name').label('品牌名称').validation({ required: true }), nga.field('letter', 'choice').label('首字母').choices(letterChoice).validation({ required: true })]);
-
-	// edit
-	Brand.editionView().actions(['list', 'delete']).fields([nga.field('name').label('品牌名称').validation({ required: true }), nga.field('letter', 'choice').label('首字母').choices(letterChoice).validation({ required: true })]);
-
-	module.exports = Brand;
+	__webpack_require__(37);
+	__webpack_require__(38);
+	__webpack_require__(39);
 
 /***/ },
 /* 37 */
 /***/ function(module, exports) {
 
-	/**
-	 * Created by gaojun on 15/12/11.
-	 */
+	/*
+	 AngularJS v1.4.8
+	 (c) 2010-2015 Google, Inc. http://angularjs.org
+	 License: MIT
+	*/
+	"use strict";
 
-	'use strict';
-
-	var CarModel = nga.entity('CarModel');
-
-	// list
-	CarModel.listView().perPage(config.default_perpage).sortDir(config.default_order).fields([nga.field('brandId', 'reference').label('品牌名').targetEntity(admin.getEntity('Brand')).targetField(nga.field('name')), nga.field('name').label('型号名称'), nga.field('carType', 'reference').label('车型').targetEntity(admin.getEntity('CarType')).targetField(nga.field('name')), nga.field('engine').label('发动机')]).listActions(['edit', 'delete']).filters([nga.field('brandId', 'reference').label('品牌名').targetEntity(admin.getEntity('Brand')).targetField(nga.field('name')), nga.field('name').label('型号名称'), nga.field('carType', 'reference').label('车型').targetEntity(admin.getEntity('CarType')).targetField(nga.field('name'))]);
-
-	// add
-	CarModel.creationView().fields([nga.field('brandId', 'reference').label('品牌名').targetEntity(admin.getEntity('Brand')).targetField(nga.field('name')).validation({ required: true }), nga.field('name').label('型号名称').validation({ required: true }), nga.field('carType', 'reference').label('车型').targetEntity(admin.getEntity('CarType')).targetField(nga.field('name')).validation({ required: true }), nga.field('engine').label('发动机').validation({ required: true })]);
-
-	// edit
-	CarModel.editionView().actions(['list', 'delete']).fields([nga.field('brandId', 'reference').label('品牌名').targetEntity(admin.getEntity('Brand')).targetField(nga.field('name')).validation({ required: true }), nga.field('name').label('型号名称').validation({ required: true }), nga.field('carType', 'reference').label('车型').targetEntity(admin.getEntity('CarType')).targetField(nga.field('name')).validation({ required: true }), nga.field('engine').label('发动机').validation({ required: true })]);
-
-	module.exports = CarModel;
+	(function (p, c, n) {
+	  'use strict';function l(b, a, g) {
+	    var d = g.baseHref(),
+	        k = b[0];return function (b, e, f) {
+	      var g, h;f = f || {};h = f.expires;g = c.isDefined(f.path) ? f.path : d;c.isUndefined(e) && (h = "Thu, 01 Jan 1970 00:00:00 GMT", e = "");c.isString(h) && (h = new Date(h));e = encodeURIComponent(b) + "=" + encodeURIComponent(e);e = e + (g ? ";path=" + g : "") + (f.domain ? ";domain=" + f.domain : "");e += h ? ";expires=" + h.toUTCString() : "";e += f.secure ? ";secure" : "";f = e.length + 1;4096 < f && a.warn("Cookie '" + b + "' possibly not set or overflowed because it was too large (" + f + " > 4096 bytes)!");k.cookie = e;
+	    };
+	  }c.module("ngCookies", ["ng"]).provider("$cookies", [function () {
+	    var b = this.defaults = {};this.$get = ["$$cookieReader", "$$cookieWriter", function (a, g) {
+	      return { get: function get(d) {
+	          return a()[d];
+	        }, getObject: function getObject(d) {
+	          return (d = this.get(d)) ? c.fromJson(d) : d;
+	        }, getAll: function getAll() {
+	          return a();
+	        }, put: function put(d, a, m) {
+	          g(d, a, m ? c.extend({}, b, m) : b);
+	        }, putObject: function putObject(d, b, a) {
+	          this.put(d, c.toJson(b), a);
+	        }, remove: function remove(a, k) {
+	          g(a, n, k ? c.extend({}, b, k) : b);
+	        } };
+	    }];
+	  }]);c.module("ngCookies").factory("$cookieStore", ["$cookies", function (b) {
+	    return { get: function get(a) {
+	        return b.getObject(a);
+	      }, put: function put(a, c) {
+	        b.putObject(a, c);
+	      }, remove: function remove(a) {
+	        b.remove(a);
+	      } };
+	  }]);l.$inject = ["$document", "$log", "$browser"];c.module("ngCookies").provider("$$cookieWriter", function () {
+	    this.$get = l;
+	  });
+	})(window, window.angular);
+	//# sourceMappingURL=angular-cookies.min.js.map
 
 /***/ },
 /* 38 */
 /***/ function(module, exports) {
 
-	/**
-	 * Created by gaojun on 15/12/11.
-	 */
+	/*global angular:true, browser:true */
 
+	/**
+	 * @license HTTP Auth Interceptor Module for AngularJS
+	 * (c) 2012 Witold Szczerba
+	 * License: MIT
+	 */
 	'use strict';
 
-	var CarType = nga.entity('CarType');
+	(function () {
+	  'use strict';
 
-	// list
-	CarType.listView().perPage(config.default_perpage).sortDir(config.default_order).fields([nga.field('name').label('车型名称')]).listActions(['edit', 'delete']);
+	  angular.module('http-auth-interceptor', ['http-auth-interceptor-buffer']).factory('authService', ['$rootScope', 'httpBuffer', function ($rootScope, httpBuffer) {
+	    return {
+	      /**
+	       * Call this function to indicate that authentication was successfull and trigger a
+	       * retry of all deferred requests.
+	       * @param data an optional argument to pass on to $broadcast which may be useful for
+	       * example if you need to pass through details of the user that was logged in
+	       * @param configUpdater an optional transformation function that can modify the
+	       * requests that are retried after having logged in.  This can be used for example
+	       * to add an authentication token.  It must return the request.
+	       */
+	      loginConfirmed: function loginConfirmed(data, configUpdater) {
+	        var updater = configUpdater || function (config) {
+	          return config;
+	        };
+	        $rootScope.$broadcast('event:auth-loginConfirmed', data);
+	        httpBuffer.retryAll(updater);
+	      },
 
-	// add
-	CarType.creationView().fields([nga.field('name').label('车型名称').validation({ required: true })]);
+	      /**
+	       * Call this function to indicate that authentication should not proceed.
+	       * All deferred requests will be abandoned or rejected (if reason is provided).
+	       * @param data an optional argument to pass on to $broadcast.
+	       * @param reason if provided, the requests are rejected; abandoned otherwise.
+	       */
+	      loginCancelled: function loginCancelled(data, reason) {
+	        httpBuffer.rejectAll(reason);
+	        $rootScope.$broadcast('event:auth-loginCancelled', data);
+	      }
+	    };
+	  }])
 
-	// edit
-	CarType.editionView().actions(['list', 'delete']).fields([nga.field('name').label('车型名称').validation({ required: true })]);
+	  /**
+	   * $http interceptor.
+	   * On 401 response (without 'ignoreAuthModule' option) stores the request
+	   * and broadcasts 'event:auth-loginRequired'.
+	   * On 403 response (without 'ignoreAuthModule' option) discards the request
+	   * and broadcasts 'event:auth-forbidden'.
+	   */
+	  .config(['$httpProvider', function ($httpProvider) {
+	    $httpProvider.interceptors.push(['$rootScope', '$q', 'httpBuffer', function ($rootScope, $q, httpBuffer) {
+	      return {
+	        responseError: function responseError(rejection) {
+	          var config = rejection.config || {};
+	          if (!config.ignoreAuthModule) {
+	            switch (rejection.status) {
+	              case 401:
+	                var deferred = $q.defer();
+	                httpBuffer.append(config, deferred);
+	                $rootScope.$broadcast('event:auth-loginRequired', rejection);
+	                return deferred.promise;
+	              case 403:
+	                $rootScope.$broadcast('event:auth-forbidden', rejection);
+	                break;
+	            }
+	          }
+	          // otherwise, default behaviour
+	          return $q.reject(rejection);
+	        }
+	      };
+	    }]);
+	  }]);
 
-	module.exports = CarType;
+	  /**
+	   * Private module, a utility, required internally by 'http-auth-interceptor'.
+	   */
+	  angular.module('http-auth-interceptor-buffer', []).factory('httpBuffer', ['$injector', function ($injector) {
+	    /** Holds all the requests, so they can be re-requested in future. */
+	    var buffer = [];
+
+	    /** Service initialized later because of circular dependency problem. */
+	    var $http;
+
+	    function retryHttpRequest(config, deferred) {
+	      function successCallback(response) {
+	        deferred.resolve(response);
+	      }
+	      function errorCallback(response) {
+	        deferred.reject(response);
+	      }
+	      $http = $http || $injector.get('$http');
+	      $http(config).then(successCallback, errorCallback);
+	    }
+
+	    return {
+	      /**
+	       * Appends HTTP request configuration object with deferred response attached to buffer.
+	       */
+	      append: function append(config, deferred) {
+	        buffer.push({
+	          config: config,
+	          deferred: deferred
+	        });
+	      },
+
+	      /**
+	       * Abandon or reject (if reason provided) all the buffered requests.
+	       */
+	      rejectAll: function rejectAll(reason) {
+	        if (reason) {
+	          for (var i = 0; i < buffer.length; ++i) {
+	            buffer[i].deferred.reject(reason);
+	          }
+	        }
+	        buffer = [];
+	      },
+
+	      /**
+	       * Retries all the buffered requests clears the buffer.
+	       */
+	      retryAll: function retryAll(updater) {
+	        for (var i = 0; i < buffer.length; ++i) {
+	          retryHttpRequest(updater(buffer[i].config), buffer[i].deferred);
+	        }
+	        buffer = [];
+	      }
+	    };
+	  }]);
+	})();
 
 /***/ },
 /* 39 */
 /***/ function(module, exports) {
 
 	/**
+	 * An Angular module that gives you access to the browsers local storage
+	 * @version v0.2.3 - 2015-10-11
+	 * @link https://github.com/grevory/angular-local-storage
+	 * @author grevory <greg@gregpike.ca>
+	 * @license MIT License, http://www.opensource.org/licenses/MIT
+	 */"use strict";
+
+	!(function (a, b) {
+	  "use strict";var c = b.isDefined,
+	      d = b.isUndefined,
+	      e = b.isNumber,
+	      f = b.isObject,
+	      g = b.isArray,
+	      h = b.extend,
+	      i = b.toJson,
+	      j = b.module("LocalStorageModule", []);j.provider("localStorageService", function () {
+	    this.prefix = "ls", this.storageType = "localStorage", this.cookie = { expiry: 30, path: "/" }, this.notify = { setItem: !0, removeItem: !1 }, this.setPrefix = function (a) {
+	      return this.prefix = a, this;
+	    }, this.setStorageType = function (a) {
+	      return this.storageType = a, this;
+	    }, this.setStorageCookie = function (a, b) {
+	      return this.cookie.expiry = a, this.cookie.path = b, this;
+	    }, this.setStorageCookieDomain = function (a) {
+	      return this.cookie.domain = a, this;
+	    }, this.setNotify = function (a, b) {
+	      return this.notify = { setItem: a, removeItem: b }, this;
+	    }, this.$get = ["$rootScope", "$window", "$document", "$parse", function (a, b, j, k) {
+	      var l,
+	          m = this,
+	          n = m.prefix,
+	          o = m.cookie,
+	          p = m.notify,
+	          q = m.storageType;j ? j[0] && (j = j[0]) : j = document, "." !== n.substr(-1) && (n = n ? n + "." : "");var r = function r(a) {
+	        return n + a;
+	      },
+	          s = (function () {
+	        try {
+	          var c = q in b && null !== b[q],
+	              d = r("__" + Math.round(1e7 * Math.random()));return c && (l = b[q], l.setItem(d, ""), l.removeItem(d)), c;
+	        } catch (e) {
+	          return q = "cookie", a.$broadcast("LocalStorageModule.notification.error", e.message), !1;
+	        }
+	      })(),
+	          t = function t(b, c) {
+	        if ((c = d(c) ? null : i(c), !s || "cookie" === m.storageType)) return s || a.$broadcast("LocalStorageModule.notification.warning", "LOCAL_STORAGE_NOT_SUPPORTED"), p.setItem && a.$broadcast("LocalStorageModule.notification.setitem", { key: b, newvalue: c, storageType: "cookie" }), z(b, c);try {
+	          l && l.setItem(r(b), c), p.setItem && a.$broadcast("LocalStorageModule.notification.setitem", { key: b, newvalue: c, storageType: m.storageType });
+	        } catch (e) {
+	          return a.$broadcast("LocalStorageModule.notification.error", e.message), z(b, c);
+	        }return !0;
+	      },
+	          u = function u(b) {
+	        if (!s || "cookie" === m.storageType) return s || a.$broadcast("LocalStorageModule.notification.warning", "LOCAL_STORAGE_NOT_SUPPORTED"), A(b);var c = l ? l.getItem(r(b)) : null;if (!c || "null" === c) return null;try {
+	          return JSON.parse(c);
+	        } catch (d) {
+	          return c;
+	        }
+	      },
+	          v = function v() {
+	        var b, c;for (b = 0; b < arguments.length; b++) if ((c = arguments[b], s && "cookie" !== m.storageType)) try {
+	          l.removeItem(r(c)), p.removeItem && a.$broadcast("LocalStorageModule.notification.removeitem", { key: c, storageType: m.storageType });
+	        } catch (d) {
+	          a.$broadcast("LocalStorageModule.notification.error", d.message), B(c);
+	        } else s || a.$broadcast("LocalStorageModule.notification.warning", "LOCAL_STORAGE_NOT_SUPPORTED"), p.removeItem && a.$broadcast("LocalStorageModule.notification.removeitem", { key: c, storageType: "cookie" }), B(c);
+	      },
+	          w = function w() {
+	        if (!s) return a.$broadcast("LocalStorageModule.notification.warning", "LOCAL_STORAGE_NOT_SUPPORTED"), !1;var b = n.length,
+	            c = [];for (var d in l) if (d.substr(0, b) === n) try {
+	          c.push(d.substr(b));
+	        } catch (e) {
+	          return a.$broadcast("LocalStorageModule.notification.error", e.Description), [];
+	        }return c;
+	      },
+	          x = function x(b) {
+	        var c = n ? new RegExp("^" + n) : new RegExp(),
+	            d = b ? new RegExp(b) : new RegExp();if (!s || "cookie" === m.storageType) return s || a.$broadcast("LocalStorageModule.notification.warning", "LOCAL_STORAGE_NOT_SUPPORTED"), C();var e = n.length;for (var f in l) if (c.test(f) && d.test(f.substr(e))) try {
+	          v(f.substr(e));
+	        } catch (g) {
+	          return a.$broadcast("LocalStorageModule.notification.error", g.message), C();
+	        }return !0;
+	      },
+	          y = (function () {
+	        try {
+	          return b.navigator.cookieEnabled || "cookie" in j && (j.cookie.length > 0 || (j.cookie = "test").indexOf.call(j.cookie, "test") > -1);
+	        } catch (c) {
+	          return a.$broadcast("LocalStorageModule.notification.error", c.message), !1;
+	        }
+	      })(),
+	          z = function z(b, c, h) {
+	        if (d(c)) return !1;if (((g(c) || f(c)) && (c = i(c)), !y)) return a.$broadcast("LocalStorageModule.notification.error", "COOKIES_NOT_SUPPORTED"), !1;try {
+	          var k = "",
+	              l = new Date(),
+	              m = "";if ((null === c ? (l.setTime(l.getTime() + -864e5), k = "; expires=" + l.toGMTString(), c = "") : e(h) && 0 !== h ? (l.setTime(l.getTime() + 24 * h * 60 * 60 * 1e3), k = "; expires=" + l.toGMTString()) : 0 !== o.expiry && (l.setTime(l.getTime() + 24 * o.expiry * 60 * 60 * 1e3), k = "; expires=" + l.toGMTString()), b)) {
+	            var n = "; path=" + o.path;o.domain && (m = "; domain=" + o.domain), j.cookie = r(b) + "=" + encodeURIComponent(c) + k + n + m;
+	          }
+	        } catch (p) {
+	          return a.$broadcast("LocalStorageModule.notification.error", p.message), !1;
+	        }return !0;
+	      },
+	          A = function A(b) {
+	        if (!y) return a.$broadcast("LocalStorageModule.notification.error", "COOKIES_NOT_SUPPORTED"), !1;for (var c = j.cookie && j.cookie.split(";") || [], d = 0; d < c.length; d++) {
+	          for (var e = c[d]; " " === e.charAt(0);) e = e.substring(1, e.length);if (0 === e.indexOf(r(b) + "=")) {
+	            var f = decodeURIComponent(e.substring(n.length + b.length + 1, e.length));try {
+	              return JSON.parse(f);
+	            } catch (g) {
+	              return f;
+	            }
+	          }
+	        }return null;
+	      },
+	          B = function B(a) {
+	        z(a, null);
+	      },
+	          C = function C() {
+	        for (var a = null, b = n.length, c = j.cookie.split(";"), d = 0; d < c.length; d++) {
+	          for (a = c[d]; " " === a.charAt(0);) a = a.substring(1, a.length);var e = a.substring(b, a.indexOf("="));B(e);
+	        }
+	      },
+	          D = function D() {
+	        return q;
+	      },
+	          E = function E(a, b, d, e) {
+	        e = e || b;var g = u(e);return null === g && c(d) ? g = d : f(g) && f(d) && (g = h(d, g)), k(b).assign(a, g), a.$watch(b, function (a) {
+	          t(e, a);
+	        }, f(a[b]));
+	      },
+	          F = function F() {
+	        for (var a = 0, c = b[q], d = 0; d < c.length; d++) 0 === c.key(d).indexOf(n) && a++;return a;
+	      };return { isSupported: s, getStorageType: D, set: t, add: t, get: u, keys: w, remove: v, clearAll: x, bind: E, deriveKey: r, length: F, cookie: { isSupported: y, set: z, add: z, get: A, remove: B, clearAll: C } };
+	    }];
+	  });
+	})(window, window.angular);
+
+/***/ },
+/* 40 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 41 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by gaojun on 15/12/26.
+	 */
+
+	'use strict';
+
+	var CarEngine = nga.entity('CarEngine');
+
+	var emissionChoice = [];
+	_.forEach(enums.base.emission, function (value, key) {
+	  var c = {
+	    label: value,
+	    value: key + 1
+	  };
+
+	  emissionChoice.push(c);
+	});
+
+	// list
+	CarEngine.listView().perPage(config.default_perpage).sortDir(config.default_order).fields([nga.field('name').label('发动机名称'), nga.field('key').label('发动机型号'), nga.field('emission').label('排量'), nga.field('emissionType', 'choice').label('排放标准').choices(emissionChoice), nga.field('intake').label('进气系统'), nga.field('maxPs').label('最大马力'), nga.field('maxRpm').label('最大功率转速'), nga.field('fuelGrade').label('燃油标号')]).listActions(['edit', 'delete']).filters([nga.field('name').label('发动机名称'), nga.field('key').label('发动机型号')]);
+
+	// add
+	CarEngine.creationView().fields([nga.field('name').label('发动机名称').validation({ required: true }), nga.field('key').label('发动机型号').validation({ required: true }), nga.field('emission', 'number').label('排量').validation({ required: true }), nga.field('emissionType', 'choice').label('排放标准').choices(emissionChoice).validation({ required: true }), nga.field('intake').label('进气系统').validation({ required: true }), nga.field('maxPs', 'number').label('最大马力').validation({ required: true }), nga.field('maxRpm', 'number').label('最大功率转速').validation({ required: true }), nga.field('fuelGrade').label('燃油标号').validation({ required: true })]);
+
+	// edit
+	CarEngine.editionView().actions(['list', 'delete']).fields([nga.field('name').label('发动机名称').validation({ required: true }), nga.field('key').label('发动机型号').validation({ required: true }), nga.field('emission', 'number').label('排量').validation({ required: true }), nga.field('emissionType', 'choice').label('排放标准').choices(emissionChoice).validation({ required: true }), nga.field('intake').label('进气系统').validation({ required: true }), nga.field('maxPs', 'number').label('最大马力').validation({ required: true }), nga.field('maxRpm', 'number').label('最大功率转速').validation({ required: true }), nga.field('fuelGrade').label('燃油标号').validation({ required: true })]);
+
+	module.exports = CarEngine;
+
+/***/ },
+/* 42 */
+/***/ function(module, exports) {
+
+	/**
 	 * Created by gaojun on 15/12/11.
 	 */
 
 	'use strict';
 
-	var City = nga.entity('City');
+	var Appraiser = nga.entity('Appraiser');
 
 	var areaChoice = [];
 	_.forEach(enums.area, function (value, key) {
@@ -1391,138 +1637,23 @@
 	});
 
 	// list
-	City.listView().perPage(config.default_perpage).sortDir(config.default_order).fields([nga.field('name').label('城市名'), nga.field('area', 'choice').label('地域').choices(areaChoice)]).listActions(['edit', 'delete']).filters([nga.field('name').label('城市名'), nga.field('area', 'choice').label('地域').choices(areaChoice)]);
+	Appraiser.listView().perPage(config.default_perpage).sortDir(config.default_order).fields([nga.field('nickname').label('评估师名称'), nga.field('title').label('职称'), nga.field('telephone').label('手机号'), nga.field('state', 'choice').label('是否激活').choices([{ label: '否', value: 0 }, { label: '是', value: 1 }])]).listActions(['edit', 'delete']).filters([nga.field('nickname').label('评估师名称'), nga.field('title').label('职称'), nga.field('telephone').label('手机号')]);
 
 	// add
-	City.creationView().fields([nga.field('name').label('城市名').validation({ required: true }), nga.field('area', 'choice').label('地域').choices(areaChoice).validation({ required: true })]);
-
-	// edit
-	City.editionView().actions(['list', 'delete']).fields([nga.field('name').label('城市名').validation({ required: true }), nga.field('area', 'choice').label('地域').choices(areaChoice).validation({ required: true })]);
-
-	module.exports = City;
-
-/***/ },
-/* 40 */
-/***/ function(module, exports) {
-
-	/**
-	 * Created by gaojun on 15/11/3.
-	 */
-
-	'use strict';
-
-	module.exports = {
-	  HUABEI: {
-	    value: 1,
-	    name: '华北'
-	  },
-	  DONGBEI: {
-	    value: 2,
-	    name: '东北'
-	  },
-	  HUADONG: {
-	    value: 3,
-	    name: '华东'
-	  },
-	  HUAZHONG: {
-	    value: 4,
-	    name: '华中'
-	  },
-	  HUANAN: {
-	    value: 5,
-	    name: '华南'
-	  },
-	  XIBU: {
-	    value: 6,
-	    name: '西部'
-	  }
-	};
-
-/***/ },
-/* 41 */
-/***/ function(module, exports) {
-
-	/**
-	 * Created by gaojun on 15/11/3.
-	 */
-
-	'use strict';
-
-	var letter = {
-	  A: 1,
-	  B: 2,
-	  C: 3,
-	  D: 4,
-	  E: 5,
-	  F: 6,
-	  G: 7,
-	  H: 8,
-	  I: 9,
-	  J: 10,
-	  K: 11,
-	  L: 12,
-	  M: 13,
-	  N: 14,
-	  O: 15,
-	  P: 16,
-	  Q: 17,
-	  R: 18,
-	  S: 19,
-	  T: 20,
-	  U: 21,
-	  V: 22,
-	  W: 23,
-	  X: 24,
-	  Y: 25,
-	  Z: 26
-	};
-
-	module.exports = {
-	  letter: letter
-	};
-
-/***/ },
-/* 42 */
-/***/ function(module, exports) {
-
-	/**
-	 * Created by gaojun on 15/12/11.
-	 */
-
-	'use strict';
-
-	var Car = nga.entity('Car');
-
-	// list
-	Car.listView().fields([nga.field('sellId', 'reference').label('车主').targetEntity(admin.getEntity('UserInfo')).targetField(nga.field('nickname')), nga.field('appraiserId', 'reference').label('评估师').targetEntity(admin.getEntity('UserInfo')).targetField(nga.field('nickname')), nga.field('brandId', 'reference').label('品牌').targetEntity(admin.getEntity('Brand')).targetField(nga.field('name')), nga.field('modelId', 'reference').label('车辆型号').targetEntity(admin.getEntity('CarModel')).targetField(nga.field('name')), nga.field('price', 'number').label('价格(万)'), nga.field('city', 'reference').label('城市').targetEntity(admin.getEntity('City')).targetField(nga.field('name'))]).listActions(['edit', 'delete']).filters([nga.field('sellId').label('车主id'), nga.field('sellUserName').label('车主账号'), nga.field('appraiserName').label('评估师'), nga.field('brandId', 'reference').label('品牌').targetEntity(admin.getEntity('Brand')).targetField(nga.field('name')), nga.field('modelName').label('车辆型号'), nga.field('price', 'number').label('价格'), nga.field('city', 'reference').label('城市').targetEntity(admin.getEntity('City')).targetField(nga.field('name'))]);
-
-	// add
-	Car.creationView().fields([nga.field('sellId') //, 'reference')
-	.label('车主')
-	//.targetEntity(admin.getEntity('UserInfo'))
-	//.targetField(nga.field('nickname'))
-	.validation({ required: true }), nga.field('sellDesc', 'wysiwyg').label('车主描述').validation({ required: true }), nga.field('appraiserId') //, 'reference')
-	.label('评估师')
-	//.targetEntity(admin.getEntity('UserInfo'))
-	//.targetField(nga.field('nickname'))
-	.validation({ required: true }), nga.field('appraiserDesc', 'wysiwyg').label('评估师描述').validation({ required: true }), nga.field('brandId', 'reference').label('品牌').targetEntity(admin.getEntity('Brand')).targetField(nga.field('name')).validation({ required: true }), nga.field('modelId', 'reference').label('车辆型号').targetEntity(admin.getEntity('CarModel')).targetField(nga.field('name')).validation({ required: true }), nga.field('price', 'number').label('价格(万)').validation({ required: true }), nga.field('distance', 'number').label('行驶里程(公里)').validation({ required: true }), nga.field('startTime', 'date').label('上牌时间').validation({ required: true }), nga.field('city', 'reference').label('城市').targetEntity(admin.getEntity('City')).targetField(nga.field('name')).validation({ required: true }), nga.field('showImg', 'file').label('展示图片').uploadInformation(config.default_file_upload), nga.field('tag', 'choices').label('特殊标签')]);
-
-	// edit
-	Car.editionView().actions(['list', 'delete']).fields([nga.field('sellId') //, 'reference')
-	.label('车主')
-	//.targetEntity(admin.getEntity('UserInfo'))
-	//.targetField(nga.field('nickname'))
-	.validation({ required: true }), nga.field('sellDesc', 'wysiwyg').label('车主描述').validation({ required: true }), nga.field('appraiserId') //, 'reference')
-	.label('评估师')
-	//.targetEntity(admin.getEntity('UserInfo'))
-	//.targetField(nga.field('nickname'))
-	.validation({ required: true }), nga.field('appraiserDesc', 'wysiwyg').label('评估师描述').validation({ required: true }), nga.field('brandId', 'reference').label('品牌').targetEntity(admin.getEntity('Brand')).targetField(nga.field('name')).validation({ required: true }), nga.field('modelId', 'reference').label('车辆型号').targetEntity(admin.getEntity('CarModel')).targetField(nga.field('name')).validation({ required: true }), nga.field('price', 'number').label('价格(万)').validation({ required: true }), nga.field('distance', 'number').label('行驶里程(公里)').validation({ required: true }), nga.field('startTime', 'date').label('上牌时间').validation({ required: true }), nga.field('city', 'reference').label('城市').targetEntity(admin.getEntity('City')).targetField(nga.field('name')).validation({ required: true }),
+	Appraiser.creationView().fields([nga.field('nickname').label('评估师名称').validation({ required: true }), nga.field('title').label('职称').validation({ required: true }), nga.field('telephone', 'number').label('手机号').validation({ required: true }),
 	//nga.field('showImg', 'file')
 	//  .label('展示图片')
 	//  .uploadInformation(config.default_file_upload),
-	nga.field('tag', 'choices').label('特殊标签')]);
+	nga.field('state', 'choice').label('是否激活').choices([{ label: '否', value: 0 }, { label: '是', value: 1 }]).validation({ required: true })]);
 
-	module.exports = Car;
+	// edit
+	Appraiser.editionView().actions(['list', 'delete']).fields([nga.field('nickname').label('评估师名称').validation({ required: true }), nga.field('title').label('职称').validation({ required: true }), nga.field('telephone', 'number').label('手机号').validation({ required: true }),
+	//nga.field('showImg', 'file')
+	//  .label('展示图片')
+	//  .uploadInformation(config.default_file_upload),
+	nga.field('state', 'choice').label('是否激活').choices([{ label: '否', value: 0 }, { label: '是', value: 1 }]).validation({ required: true })]);
+
+	module.exports = Appraiser;
 
 /***/ }
 /******/ ]);

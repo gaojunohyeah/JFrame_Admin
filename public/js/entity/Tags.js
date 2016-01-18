@@ -4,37 +4,37 @@
 
 'use strict';
 
-var CarType = nga.entity('CarType');
+var Tags = nga.entity('Tags');
 
 // list
-CarType.listView()
+Tags.listView()
   .perPage(config.default_perpage)
   .sortDir(config.default_order)
   .fields([
     nga.field('name')
-      .label('车型名称')
+      .label('标签名')
   ])
   .listActions(['edit', 'delete'])
   .filters([
     nga.field('name')
-      .label('车型名称')
+      .label('标签名')
   ]);
 
 // add
-CarType.creationView()
+Tags.creationView()
   .fields([
     nga.field('name')
-      .label('车型名称')
+      .label('标签名')
       .validation({required: true})
   ]);
 
 // edit
-CarType.editionView()
+Tags.editionView()
   .actions(['list', 'delete'])
   .fields([
     nga.field('name')
-      .label('车型名称')
+      .label('标签名')
       .validation({required: true})
   ]);
 
-module.exports = CarType;
+module.exports = Tags;

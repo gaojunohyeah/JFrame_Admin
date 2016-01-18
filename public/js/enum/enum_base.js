@@ -33,6 +33,10 @@ var letter = {
   Z: 26,
 };
 
+// 排放标准
+var emission = ['国五', '国四及以上', '国三及以上', '国二及以上'];
+
 module.exports = {
   letter: letter,
+  emission: emission,
 };

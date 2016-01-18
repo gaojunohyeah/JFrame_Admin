@@ -15,7 +15,7 @@ Car.listView()
       .targetField(nga.field('nickname')),
     nga.field('appraiserId', 'reference')
       .label('评估师')
-      .targetEntity(admin.getEntity('UserInfo'))
+      .targetEntity(admin.getEntity('Appraiser'))
       .targetField(nga.field('nickname')),
     nga.field('brandId', 'reference')
       .label('品牌')
@@ -25,7 +25,7 @@ Car.listView()
       .label('车辆型号')
       .targetEntity(admin.getEntity('CarModel'))
       .targetField(nga.field('name')),
-    nga.field('price', 'number')
+    nga.field('price', 'float')
       .label('价格(万)'),
     nga.field('city', 'reference')
       .label('城市')
@@ -46,7 +46,7 @@ Car.listView()
       .targetField(nga.field('name')),
     nga.field('modelName')
       .label('车辆型号'),
-    nga.field('price', 'number')
+    nga.field('price', 'float')
       .label('价格'),
     nga.field('city', 'reference')
       .label('城市')
@@ -57,18 +57,18 @@ Car.listView()
 // add
 Car.creationView()
   .fields([
-    nga.field('sellId')//, 'reference')
+    nga.field('sellId', 'reference')
       .label('车主')
-      //.targetEntity(admin.getEntity('UserInfo'))
-      //.targetField(nga.field('nickname'))
+      .targetEntity(admin.getEntity('UserInfo'))
+      .targetField(nga.field('nickname'))
       .validation({required: true}),
     nga.field('sellDesc', 'wysiwyg')
       .label('车主描述')
       .validation({required: true}),
-    nga.field('appraiserId')//, 'reference')
+    nga.field('appraiserId', 'reference')
       .label('评估师')
-      //.targetEntity(admin.getEntity('UserInfo'))
-      //.targetField(nga.field('nickname'))
+      .targetEntity(admin.getEntity('Appraiser'))
+      .targetField(nga.field('nickname'))
     .validation({required: true}),
     nga.field('appraiserDesc', 'wysiwyg')
       .label('评估师描述')
@@ -83,10 +83,10 @@ Car.creationView()
       .targetEntity(admin.getEntity('CarModel'))
       .targetField(nga.field('name'))
       .validation({required: true}),
-    nga.field('price', 'number')
+    nga.field('price', 'float')
       .label('价格(万)')
       .validation({required: true}),
-    nga.field('distance', 'number')
+    nga.field('distance', 'float')
       .label('行驶里程(公里)')
       .validation({required: true}),
     nga.field('startTime', 'date')
@@ -100,26 +100,33 @@ Car.creationView()
     nga.field('showImg', 'file')
       .label('展示图片')
       .uploadInformation(config.default_file_upload),
-    nga.field('tag', 'choices')
-      .label('特殊标签'),
+    nga.field('tag', 'reference_many')
+      .label('特殊标签')
+      .targetEntity(admin.getEntity('Tags'))
+      .targetField(nga.field('name')),
+    nga.field('color', 'reference')
+      .label('颜色')
+      .targetEntity(admin.getEntity('CarColor'))
+      .targetField(nga.field('name'))
+      .validation({required: true})
   ]);
 
 // edit
 Car.editionView()
   .actions(['list', 'delete'])
   .fields([
-    nga.field('sellId')//, 'reference')
+    nga.field('sellId', 'reference')
       .label('车主')
-      //.targetEntity(admin.getEntity('UserInfo'))
-      //.targetField(nga.field('nickname'))
+      .targetEntity(admin.getEntity('UserInfo'))
+      .targetField(nga.field('nickname'))
       .validation({required: true}),
     nga.field('sellDesc', 'wysiwyg')
       .label('车主描述')
       .validation({required: true}),
-    nga.field('appraiserId')//, 'reference')
+    nga.field('appraiserId', 'reference')
       .label('评估师')
-      //.targetEntity(admin.getEntity('UserInfo'))
-      //.targetField(nga.field('nickname'))
+      .targetEntity(admin.getEntity('Appraiser'))
+      .targetField(nga.field('nickname'))
       .validation({required: true}),
     nga.field('appraiserDesc', 'wysiwyg')
       .label('评估师描述')
@@ -134,10 +141,10 @@ Car.editionView()
       .targetEntity(admin.getEntity('CarModel'))
       .targetField(nga.field('name'))
       .validation({required: true}),
-    nga.field('price', 'number')
+    nga.field('price', 'float')
       .label('价格(万)')
       .validation({required: true}),
-    nga.field('distance', 'number')
+    nga.field('distance', 'float')
       .label('行驶里程(公里)')
       .validation({required: true}),
     nga.field('startTime', 'date')
@@ -151,8 +158,15 @@ Car.editionView()
     //nga.field('showImg', 'file')
     //  .label('展示图片')
     //  .uploadInformation(config.default_file_upload),
-    nga.field('tag', 'choices')
-      .label('特殊标签'),
+    nga.field('tag', 'reference_many')
+      .label('特殊标签')
+      .targetEntity(admin.getEntity('Tags'))
+      .targetField(nga.field('name')),
+    nga.field('color', 'reference')
+      .label('颜色')
+      .targetEntity(admin.getEntity('CarColor'))
+      .targetField(nga.field('name'))
+      .validation({required: true})
   ]);
 
 module.exports = Car;

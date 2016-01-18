@@ -1,40 +1,40 @@
 /**
- * Created by gaojun on 15/12/11.
+ * Created by gaojun on 15/12/26.
  */
 
 'use strict';
 
-var CarType = nga.entity('CarType');
+var CarColor = nga.entity('CarColor');
 
 // list
-CarType.listView()
+CarColor.listView()
   .perPage(config.default_perpage)
   .sortDir(config.default_order)
   .fields([
     nga.field('name')
-      .label('车型名称')
+      .label('颜色名称')
   ])
   .listActions(['edit', 'delete'])
   .filters([
     nga.field('name')
-      .label('车型名称')
+      .label('颜色名称')
   ]);
 
 // add
-CarType.creationView()
+CarColor.creationView()
   .fields([
     nga.field('name')
-      .label('车型名称')
+      .label('颜色名称')
       .validation({required: true})
   ]);
 
 // edit
-CarType.editionView()
+CarColor.editionView()
   .actions(['list', 'delete'])
   .fields([
     nga.field('name')
-      .label('车型名称')
+      .label('颜色名称')
       .validation({required: true})
   ]);
 
-module.exports = CarType;
+module.exports = CarColor;

@@ -29,8 +29,7 @@ var GM_UserManager = function () {
 
     // 查询用户
     var findUser = function () {
-      return JF.dao.GM_UserDao.findByName(username)
-        .catch(JF.util.http.error.bind(null, res));
+      return JF.dao.GM_UserDao.findByName(username);
     };
 
     // 用户账号密码验证
@@ -88,7 +87,7 @@ var GM_UserManager = function () {
    * @param reqData 请求入参数据
    * @param mname 模块名称
    */
-  BaseManager.prototype.addNew = function (res, reqData, mname) {
+  this.addNew = function (res, reqData, mname) {
     var model = JF.dbs[mname];
     var mdao = JF.dao[mname + "Dao"];
 
@@ -106,7 +105,7 @@ var GM_UserManager = function () {
       var entity = model.build(newData);
 
       // 保存
-      return mdao.save(entity).catch(JF.util.http.error.bind(null, res));
+      return mdao.save(entity);
     };
 
     var addRes = function (entity) {

@@ -37,7 +37,7 @@ var requestInterceptor = function (RestangularProvider) {
 var responseInterceptor = function (RestangularProvider) {
   RestangularProvider.addResponseInterceptor(function (data, operation, what, url, response) {
     if (operation == "getList") {
-      response.totalCount = response.headers('Content-Range');
+      response.totalCount = response.headers('Total_Count');
       //response.totalCount = contentRange;
     } else if (operation == "remove") {
 

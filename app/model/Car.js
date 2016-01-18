@@ -83,7 +83,7 @@ function db_init(sequelize) {
       },
     
       price: {
-        type: Sequelize.BIGINT(20),
+        type: Sequelize.DOUBLE(20, 3),
         allowNull: false,
         unique: false,
         field: "price",
@@ -93,7 +93,7 @@ function db_init(sequelize) {
       },
     
       distance: {
-        type: Sequelize.INTEGER(10),
+        type: Sequelize.DOUBLE(10, 3),
         allowNull: false,
         unique: false,
         field: "distance",
@@ -113,12 +113,22 @@ function db_init(sequelize) {
       },
     
       city: {
-        type: Sequelize.INTEGER(10),
+        type: Sequelize.BIGINT(10),
         allowNull: true,
         unique: false,
         field: "city",
         defaultValue: 0,
         comment: "城市id",
+        
+      },
+    
+      color: {
+        type: Sequelize.INTEGER(5),
+        allowNull: true,
+        unique: false,
+        field: "color",
+        defaultValue: 0,
+        comment: "颜色",
         
       },
     

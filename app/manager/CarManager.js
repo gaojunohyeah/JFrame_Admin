@@ -16,6 +16,42 @@ var BaseManager = require(config.serverRoot + '/manager/base/BaseManager');
 var CarManager = function () {
   var _this = this;
 
+  this.getByIdSuf = function (reData) {
+    if (reData.tag && !_.isEmpty(reData)) {
+      var tags = reData.tag.split(",");
+      var tagArray = [];
+      _.forEach(tags, function (tag) {
+        tagArray.push(parseInt(tag));
+      });
+
+      reData.tag = tagArray;
+    }
+
+    return reData;
+  };
+
+  this.updatePre = function (upData) {
+    if (upData.tag && !_.isEmpty(upData)) {
+      upData.tag = upData.tag.join(",");
+    }
+
+    return upData;
+  };
+
+  this.delByIdSuf = function (reData) {
+    if (reData.tag && !_.isEmpty(reData)) {
+      var tags = reData.tag.split(",");
+      var tagArray = [];
+      _.forEach(tags, function (tag) {
+        tagArray.push(parseInt(tag));
+      });
+
+      reData.tag = tagArray;
+    }
+
+    return reData;
+  };
+
   /**
    * 新增数据接口
    *
@@ -36,10 +72,14 @@ var CarManager = function () {
         }
       });
 
+      if (newData.tag && !_.isEmpty(newData)) {
+        newData.tag = newData.tag.join(",");
+      }
+
       var entity = model.build(newData);
 
       // 保存
-      return mdao.save(entity).catch(JF.util.http.error.bind(null, res));
+      return mdao.save(entity);
     };
 
     var moveImg = function () {
