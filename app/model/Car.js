@@ -56,7 +56,7 @@ function db_init(sequelize) {
         type: Sequelize.STRING(300),
         allowNull: true,
         unique: false,
-        field: "sellDesc",
+        field: "appraiserDesc",
         defaultValue: "",
         comment: "评估师描述",
         

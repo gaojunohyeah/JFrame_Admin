@@ -43,7 +43,7 @@ function db_init(sequelize) {
       },
     
       emission: {
-        type: Sequelize.INTEGER(10),
+        type: Sequelize.DOUBLE(10, 3),
         allowNull: true,
         unique: false,
         field: "emission",

@@ -21,7 +21,9 @@ var CarManager = function () {
       var tags = reData.tag.split(",");
       var tagArray = [];
       _.forEach(tags, function (tag) {
-        tagArray.push(parseInt(tag));
+        if (!_.isNull(tag) && !_.isEqual('', tag)) {
+          tagArray.push(parseInt(tag));
+        }
       });
 
       reData.tag = tagArray;
@@ -32,7 +34,7 @@ var CarManager = function () {
 
   this.updatePre = function (upData) {
     if (upData.tag && !_.isEmpty(upData)) {
-      upData.tag = upData.tag.join(",");
+      upData.tag = ',' + upData.tag.join(",") + ',';
     }
 
     return upData;
@@ -73,7 +75,7 @@ var CarManager = function () {
       });
 
       if (newData.tag && !_.isEmpty(newData)) {
-        newData.tag = newData.tag.join(",");
+        newData.tag = ',' + newData.tag.join(",") + ',';
       }
 
       var entity = model.build(newData);

@@ -14,6 +14,7 @@ exports.BrandSeriesManager = require(config.serverRoot + '/manager/BrandSeriesMa
 exports.CarManager = require(config.serverRoot + '/manager/CarManager');
 exports.CarColorManager = require(config.serverRoot + '/manager/CarColorManager');
 exports.CarEngineManager = require(config.serverRoot + '/manager/CarEngineManager');
+exports.CarImgManager = require(config.serverRoot + '/manager/CarImgManager');
 exports.CarModelManager = require(config.serverRoot + '/manager/CarModelManager');
 exports.CarTypeManager = require(config.serverRoot + '/manager/CarTypeManager');
 exports.CityManager = require(config.serverRoot + '/manager/CityManager');
