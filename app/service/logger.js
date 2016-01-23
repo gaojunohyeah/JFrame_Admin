@@ -14,7 +14,7 @@ log4js.configure({
 
     }, //控制台输出
     {
-      type: "datefile",
+      type: "dateFile",
       filename: 'logs/log.log',
       pattern: "-yyyy-MM-dd",
       //maxLogSize: 20480,
